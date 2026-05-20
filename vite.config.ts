@@ -30,6 +30,10 @@ export default defineConfig(() => {
             }
 
             if (id.includes('/node_modules/elkjs/')) {
+              // Split the in-process fallback (elk.bundled) from the worker-mode API
+              // so production loads only the small api shim; the bundled engine is
+              // fetched only when the worker path is unavailable.
+              if (id.includes('elk.bundled')) return 'vendor-elk-bundled';
               return 'vendor-elk';
             }
 
