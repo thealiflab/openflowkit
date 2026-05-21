@@ -37,6 +37,9 @@ export interface UseFlowCanvasContextActionsResult {
   onReleaseFromSection: () => void;
   onToggleSectionLock: () => void;
   onToggleSectionHidden: () => void;
+  onTogglePinPosition: () => void;
+  isPinPositionToggleApplicable: boolean;
+  isCurrentNodePinned: boolean;
   onAlignNodes: (direction: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => void;
   onDistributeNodes: (direction: 'horizontal' | 'vertical') => void;
   onGroupSelected: () => void;
@@ -176,6 +179,21 @@ export function useFlowCanvasContextActions({
     onCloseContextMenu();
   }
 
+  // Pin position: only meaningful for leaf nodes (sections derive bounds from
+  // their children, so anchoring them would fight the layout engine).
+  const isPinPositionToggleApplicable =
+    Boolean(contextNode) && contextNode?.type !== 'section';
+  const isCurrentNodePinned = contextNode?.data?.pinned === true;
+
+  function onTogglePinPosition(): void {
+    if (!contextMenu.id || !isPinPositionToggleApplicable) {
+      onCloseContextMenu();
+      return;
+    }
+    updateNodeData(contextMenu.id, { pinned: !isCurrentNodePinned });
+    onCloseContextMenu();
+  }
+
   return {
     selectedCount,
     onPaste,
@@ -189,6 +207,9 @@ export function useFlowCanvasContextActions({
     onReleaseFromSection,
     onToggleSectionLock,
     onToggleSectionHidden,
+    onTogglePinPosition,
+    isPinPositionToggleApplicable,
+    isCurrentNodePinned,
     onAlignNodes: onAlignNodesAndClose,
     onDistributeNodes: onDistributeNodesAndClose,
     onGroupSelected,

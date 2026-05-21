@@ -132,6 +132,24 @@ export function useFlowEditorInteractionBindings({
                     : node
             ));
         },
+        onTogglePinPositionShortcut: () => {
+            // Pin/unpin every selected non-section node. Sections are skipped
+            // because their bounds derive from children (auto-layout owns them).
+            setNodes((nodes) => {
+                const selectedNonSections = nodes.filter(
+                    (node) => node.selected && node.type !== 'section'
+                );
+                if (selectedNonSections.length === 0) return nodes;
+                const anyUnpinned = selectedNonSections.some(
+                    (node) => node.data?.pinned !== true
+                );
+                return nodes.map((node) =>
+                    node.selected && node.type !== 'section'
+                        ? { ...node, data: { ...node.data, pinned: anyUnpinned } }
+                        : node
+                );
+            });
+        },
     });
 
     useNodeQuickCreateRequest(

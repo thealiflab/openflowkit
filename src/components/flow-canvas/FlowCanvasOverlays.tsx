@@ -122,6 +122,9 @@ export function FlowCanvasOverlays({
             selectedCount={contextActions.selectedCount}
             onAlignNodes={contextActions.onAlignNodes}
             onDistributeNodes={contextActions.onDistributeNodes}
+            onTogglePinPosition={contextActions.onTogglePinPosition}
+            isPinPositionToggleApplicable={contextActions.isPinPositionToggleApplicable}
+            isCurrentNodePinned={contextActions.isCurrentNodePinned}
           />
         </Suspense>
       ) : null}

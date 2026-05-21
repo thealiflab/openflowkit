@@ -24,6 +24,8 @@ import {
   Maximize2,
   FolderInput,
   ArrowUpRight,
+  Pin,
+  PinOff,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useMenuKeyboardNavigation } from '@/hooks/useMenuKeyboardNavigation';
@@ -86,6 +88,9 @@ export interface ContextMenuProps {
   onReleaseFromSection?: () => void;
   onToggleSectionLock?: () => void;
   onToggleSectionHidden?: () => void;
+  onTogglePinPosition?: () => void;
+  isPinPositionToggleApplicable?: boolean;
+  isCurrentNodePinned?: boolean;
   canPaste?: boolean;
   // Multi-select
   selectedCount?: number;
@@ -115,6 +120,9 @@ export function ContextMenu({
   onReleaseFromSection,
   onToggleSectionLock,
   onToggleSectionHidden,
+  onTogglePinPosition,
+  isPinPositionToggleApplicable = false,
+  isCurrentNodePinned = false,
   canPaste,
   selectedCount = 0,
   onAlignNodes,
@@ -234,6 +242,20 @@ export function ContextMenu({
                 >
                   {isSectionHidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   {isSectionHidden ? 'Show Section' : 'Hide Section'}
+                </button>
+              ) : null}
+              {isPinPositionToggleApplicable && onTogglePinPosition ? (
+                <button
+                  role="menuitem"
+                  onClick={onTogglePinPosition}
+                  className={MENU_BUTTON_CLASS_NAME}
+                >
+                  {isCurrentNodePinned ? (
+                    <PinOff className="w-4 h-4" />
+                  ) : (
+                    <Pin className="w-4 h-4" />
+                  )}
+                  {isCurrentNodePinned ? 'Unpin Position' : 'Pin Position'}
                 </button>
               ) : null}
             </>
