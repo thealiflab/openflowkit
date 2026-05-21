@@ -5,7 +5,8 @@
   "type": "module",
   "workspaces": [
     "web",
-    "docs-site"
+    "docs-site",
+    "mcp-server"
   ],
   "homepage": "https://openflowkit.com",
   "engines": {

@@ -76,7 +76,7 @@ export default defineConfig(() => {
       setupFiles: './vitest.setup.ts',
       testTimeout: 10000,
       maxWorkers: 2,
-      exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
+      exclude: ['e2e/**', 'node_modules/**', 'dist/**', 'mcp-server/**'],
       coverage: {
         provider: 'v8',
         reporter: ['text', 'lcov'],

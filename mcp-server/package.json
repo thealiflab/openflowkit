@@ -1,0 +1,52 @@
+{
+  "name": "@openflowkit/mcp-server",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for OpenFlowKit — turn AI clients (Claude Desktop, Cursor, Windsurf) into first-class diagramming agents.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "openflowkit",
+    "diagram",
+    "flowchart",
+    "mermaid",
+    "claude",
+    "anthropic"
+  ],
+  "homepage": "https://github.com/Vrun-design/openflowkit#readme",
+  "bugs": "https://github.com/Vrun-design/openflowkit/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vrun-design/openflowkit.git",
+    "directory": "mcp-server"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "openflowkit-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "test": "vitest --config vitest.config.ts",
+    "test:run": "vitest --config vitest.config.ts --run",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.0"
+  }
+}
