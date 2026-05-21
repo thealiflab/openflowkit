@@ -31,8 +31,10 @@ const ROLLOUT_FLAG_DEFINITIONS: Record<RolloutFlagKey, RolloutFlagDefinition> = 
   collaborationEnabled: {
     key: 'collaborationEnabled',
     envVar: 'VITE_COLLABORATION_ENABLED',
-    defaultEnabled: true,
-    description: 'WebRTC peer collaboration (beta)',
+    // Disabled by default: the WebRTC signaling path is unreliable for end users.
+    // Set VITE_COLLABORATION_ENABLED=true to re-enable for local testing.
+    defaultEnabled: false,
+    description: 'WebRTC peer collaboration (beta, disabled)',
   },
   architectureLintEnabled: {
     key: 'architectureLintEnabled',
