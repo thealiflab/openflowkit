@@ -109,6 +109,9 @@ export interface NodeCanvasMetadata {
   rotation?: number;
   width?: number;
   height?: number;
+  // When true, auto-layout treats this node as a fixed anchor — its position is
+  // preserved and other nodes are arranged around it.
+  pinned?: boolean;
 }
 
 export interface ClassNodeData {

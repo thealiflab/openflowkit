@@ -95,16 +95,29 @@ export function buildElkNode(
       }
     : {};
 
+  // Anchored layout: pinned nodes keep their current canvas position and
+  // ELK arranges the rest around them. Position is supplied as ELK input;
+  // the FIXED placement strategy tells the layered algorithm to honor it.
+  const pinned = node.data?.pinned === true && !hasChildren;
+  const pinnedOptions = pinned
+    ? {
+        'org.eclipse.elk.position': `(${node.position.x},${node.position.y})`,
+        'org.eclipse.elk.layered.nodePlacement.strategy': 'FIXED',
+      }
+    : {};
+
   return {
     id: node.id,
     width: hasChildren ? undefined : width,
     height: hasChildren ? undefined : height,
+    ...(pinned ? { x: node.position.x, y: node.position.y } : {}),
     children: children.map((child) =>
       buildElkNode(child, childrenByParent, allEdges, nodeMinWidth, nodeMinHeight, rootElkDirection)
     ),
     layoutOptions: {
       'elk.padding': ELK_SECTION_PADDING,
       ...compoundLayoutOptions,
+      ...pinnedOptions,
     },
   };
 }

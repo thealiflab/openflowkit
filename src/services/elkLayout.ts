@@ -106,11 +106,21 @@ export async function getElkLayout(
   });
   const cached = getCachedLayout(cacheKey);
   if (cached) return cached;
-  const { layoutOptions } = buildResolvedLayoutConfiguration({
+  const baseConfiguration = buildResolvedLayoutConfiguration({
     ...options,
     algorithm,
     diagramType: effectiveDiagramType,
   });
+  // Anchored layout: when any node is pinned, switch ELK to interactive mode
+  // so it honors the per-node `x`/`y` positions emitted by buildElkNode.
+  const hasPinnedNodes = nodes.some((node) => node.data?.pinned === true);
+  const layoutOptions = hasPinnedNodes
+    ? {
+        ...baseConfiguration.layoutOptions,
+        'org.eclipse.elk.interactiveLayout': 'true',
+        'org.eclipse.elk.layered.layering.strategy': 'INTERACTIVE',
+      }
+    : baseConfiguration.layoutOptions;
   const { topLevelNodes, childrenByParent, sortedEdges } = normalizeLayoutInputsForDeterminism(
     nodes,
     edges

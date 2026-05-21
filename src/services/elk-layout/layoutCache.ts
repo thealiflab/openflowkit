@@ -24,7 +24,14 @@ export function getLayoutCacheKey(
     .map((e) => `${e.source}>${e.target}`)
     .sort()
     .join(',');
-  return `${nodeStr}|${edgeStr}|${options.direction ?? 'TB'}:${options.algorithm ?? 'layered'}:${options.spacing ?? 'normal'}:${options.diagramType ?? ''}`;
+  // Pinned nodes contribute their position to the key so toggling a pin or
+  // moving a pinned node invalidates the cached layout.
+  const pinnedStr = nodes
+    .filter((n) => n.data?.pinned === true)
+    .map((n) => `${n.id}@${Math.round(n.position.x)},${Math.round(n.position.y)}`)
+    .sort()
+    .join(';');
+  return `${nodeStr}|${edgeStr}|${options.direction ?? 'TB'}:${options.algorithm ?? 'layered'}:${options.spacing ?? 'normal'}:${options.diagramType ?? ''}|pinned:${pinnedStr}`;
 }
 
 export function clearLayoutCache(): void {
