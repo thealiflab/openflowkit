@@ -9,7 +9,7 @@ import { HomeTemplatesView } from './home/HomeTemplatesView';
 import { shouldShowWelcomeModal } from './home/welcomeModalState';
 
 type HomePageTab = 'home' | 'templates' | 'settings';
-type HomeSettingsTab = 'general' | 'canvas' | 'shortcuts' | 'ai';
+type HomeSettingsTab = 'general' | 'canvas' | 'shortcuts' | 'ai' | 'mcp';
 
 const LazyWelcomeModal = lazy(async () => {
   const module = await import('./WelcomeModal');

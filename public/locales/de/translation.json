@@ -305,7 +305,8 @@
     "privacy": "Datenschutz",
     "themeLight": "Hell",
     "themeDark": "Dunkel",
-    "themeSystem": "System"
+    "themeSystem": "System",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "Tastaturkürzel",
@@ -860,7 +861,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "Geschwungen",
+      "edgeStyleRounded": "Abgerundet",
+      "edgeStyleSharp": "Spitz",
+      "edgeStyleStraight": "Gerade"
     },
     "ai": {
       "provider": "Anbieter",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "KI-Tools verbinden (MCP)",
+    "intro": "Füge den OpenFlowKit MCP-Server zu Claude Desktop, Cursor, Windsurf oder einem beliebigen MCP-Client hinzu. Dein Assistent erhält Diagramm-Tools, die lokal laufen, keine API-Schlüssel erforderlich, keine Daten verlassen deine Maschine.",
+    "installHeading": "Server installieren",
+    "installNote": "Erfordert Node 18+. Keine globale Installation nötig, npx lädt bei Bedarf.",
+    "configHeading": "Zu deinem KI-Assistenten hinzufügen",
+    "configPathLabel": "Hinzufügen in",
+    "configRestartNote": "Client nach dem Speichern neu starten.",
+    "copyConfig": "MCP-Konfiguration kopieren",
+    "copyInstall": "Installationsbefehl kopieren",
+    "keysNote": "Keine API-Schlüssel nötig. Dein KI-Client steuert die Tools mit seinem eigenen Modell.",
+    "toolsHeading": "Tools, die dein Assistent verwendet",
+    "docsLink": "Vollständige MCP-Dokumentation",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "Tools",
+    "statClients": "Clients",
+    "statTransport": "stdio",
+    "statTransportLabel": "Transport",
+    "stepsLabel": "Einrichtungsschritte",
+    "clientPicker": "KI-Assistent",
+    "toolsIntro": "Das sind die Fähigkeiten, die dein KI-Assistent erhält. Er wählt automatisch eine basierend auf deiner Anfrage.",
+    "footerNote": "Verbindungsprobleme oder eigenen Client bauen?",
+    "tryItHeading": "Mit einem Prompt ausprobieren",
+    "tryItIntro": "Füge diese in deinen KI-Assistenten ein. Der Installations-Prompt bittet einen agentischen Client (Cursor, Claude Code, Windsurf), die Konfiguration für dich zu schreiben; der Test-Prompt prüft die Verbindung.",
+    "installPromptLabel": "Installations-Prompt",
+    "installPromptHint": "Für Cursor / Claude Code / Windsurf Agents",
+    "testPromptLabel": "Test-Prompt",
+    "testPromptHint": "In jeden verbundenen Client einfügen",
+    "copyInstallPrompt": "Installations-Prompt kopieren",
+    "copyTestPrompt": "Test-Prompt kopieren"
   }
 }

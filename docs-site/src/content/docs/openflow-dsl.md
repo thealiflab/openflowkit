@@ -23,8 +23,8 @@ Use Mermaid instead when ecosystem compatibility matters more than editor-native
 
 Start with a header:
 
-```yaml
-flow: "User Signup"
+```text
+flow: User Signup
 direction: TB
 ```
 
@@ -40,9 +40,10 @@ Common direction values:
 Use explicit node declarations with stable ids.
 
 ```text
-node signup [label: "Signup Form"]
-node verify [label: "Verify Email"]
-node success [label: "Workspace Ready", shape: capsule]
+[start] start
+[process] signup: Signup Form { icon: "UserPlus", color: "blue" }
+[process] verify: Verify Email { icon: "Mail", color: "violet" }
+[end] success: Workspace Ready { color: "emerald" }
 ```
 
 Good ids are:
@@ -57,11 +58,21 @@ Good ids are:
 Create edges with arrow syntax:
 
 ```text
+start ==> signup
 signup -> verify
-verify -> success
+verify ==> success
 ```
 
-You can also attach labels or other edge-level metadata when the diagram needs explicit branch meaning.
+You can attach labels with inline branch syntax:
+
+```text
+[decision] approved: Approved? { color: "amber" }
+verify -> approved
+approved ->|Yes| success
+approved ->|No| signup
+```
+
+Common edge styles are `->` for default flow, `==>` for primary flow, `-->` for secondary flow, and `..` for dotted async or optional relationships.
 
 ## Why teams use it
 
@@ -83,5 +94,6 @@ Use DSL when you want to control the structure, then switch back to the canvas f
 ## Related pages
 
 - [Mermaid vs OpenFlow](/mermaid-vs-openflow/)
+- [MCP Server](/mcp-server/)
 - [Studio Overview](/studio-overview/)
 - [Choose an Input Mode](/choose-input-mode/)

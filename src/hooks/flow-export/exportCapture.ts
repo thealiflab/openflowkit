@@ -369,6 +369,26 @@ export async function encodeVideoFromFrames(params: {
     signal,
     onProgress,
   } = params;
+
+  // Prefer WebCodecs (deterministic, faster-than-realtime, H.264 MP4) when the
+  // runtime supports it; fall back to MediaRecorder otherwise.
+  const { canEncodeH264Mp4, encodeVideoWithWebCodecs } = await import(
+    '@/services/export/webCodecsExport'
+  );
+  if (await canEncodeH264Mp4(width, height, fps)) {
+    return encodeVideoWithWebCodecs({
+      frames,
+      width,
+      height,
+      fps,
+      videoBitsPerSecond,
+      backgroundColor,
+      backgroundPainter,
+      signal,
+      onProgress,
+    });
+  }
+
   const { canvas, context } = createExportCanvas(width, height);
   const stream = canvas.captureStream(fps);
   const recorder = new MediaRecorder(stream, {

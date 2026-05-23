@@ -58,5 +58,102 @@
       "Node spacing stays compact and readable.",
       "Baseline case remains exact Mermaid layout."
     ]
+  },
+  {
+    "id": "gold-flowchart-cycle-loop",
+    "fixtureName": "flowchart-cycle-loop",
+    "priority": "p0",
+    "failureModes": ["cycle_collapse_drift", "edge_route_drift"],
+    "userImpact": "Cyclic flows like retry / verify loops are a flowchart staple; collapsing the back-edge breaks the user's intent.",
+    "successCriteria": [
+      "All three forward edges and the back-edge survive import.",
+      "No node is silently merged or dropped because of the cycle.",
+      "Back-edge remains visually distinct from forward path."
+    ]
+  },
+  {
+    "id": "gold-flowchart-self-loop",
+    "fixtureName": "flowchart-self-loop",
+    "priority": "p1",
+    "failureModes": ["self_edge_lost", "edge_route_drift"],
+    "userImpact": "Self-loops are how users represent retry-until-success; if they disappear on import the flow loses its meaning.",
+    "successCriteria": [
+      "Self-edge on the retry node survives import.",
+      "Downstream Done node remains connected.",
+      "No spurious extra nodes appear."
+    ]
+  },
+  {
+    "id": "gold-flowchart-wide-branching",
+    "fixtureName": "flowchart-wide-branching",
+    "priority": "p1",
+    "failureModes": ["fan_out_collapse", "rank_order_drift"],
+    "userImpact": "Dispatcher / fan-out patterns are common in pipeline diagrams; collapsing six siblings into a stack destroys the visual.",
+    "successCriteria": [
+      "All six children remain distinct nodes.",
+      "Each child stays directly connected to the dispatcher.",
+      "Children read as a row (or visually-grouped fan) under the dispatcher."
+    ]
+  },
+  {
+    "id": "gold-flowchart-quoted-special-chars",
+    "fixtureName": "flowchart-quoted-special-chars",
+    "priority": "p1",
+    "failureModes": ["label_escape_drift", "identifier_reconciliation_drift"],
+    "userImpact": "Real-world labels carry commas, ampersands, and periods; mishandling them either silently drops the label or breaks parsing.",
+    "successCriteria": [
+      "Quoted labels render with their punctuation intact.",
+      "Comma and period survive without HTML-entity escaping leaking through.",
+      "Node identity remains stable across import.",
+      "Ampersand survives inside quoted labels (e.g. 'User & Auth') without being misread as a fan-out separator."
+    ]
+  },
+  {
+    "id": "gold-flowchart-edge-styles-mixed",
+    "fixtureName": "flowchart-edge-styles-mixed",
+    "priority": "p1",
+    "failureModes": ["edge_style_collapse", "edge_route_drift"],
+    "userImpact": "Distinct edge styles (thick / dotted / open) carry semantic meaning; collapsing them all to default removes the author's intent.",
+    "successCriteria": [
+      "Thick (==>) edge stays visually heavier than default.",
+      "Dotted (-.->) edge keeps its dash pattern.",
+      "Open connector (---) remains unarrowed."
+    ]
+  },
+  {
+    "id": "gold-flowchart-parallel-edges",
+    "fixtureName": "flowchart-parallel-edges",
+    "priority": "p1",
+    "failureModes": ["parallel_edge_merge", "edge_label_loss"],
+    "userImpact": "Two HTTP methods between client and server should both render; merging them or losing the labels makes the diagram lie.",
+    "successCriteria": [
+      "Both GET and POST edges remain present.",
+      "Edge labels stay attached to the correct edge.",
+      "Edges visually separate rather than overlapping."
+    ]
+  },
+  {
+    "id": "gold-flowchart-direction-LR-classes",
+    "fixtureName": "flowchart-direction-LR-with-classes",
+    "priority": "p1",
+    "failureModes": ["direction_drift", "class_style_drop"],
+    "userImpact": "LR pipelines + classDef styling are how authors signal hot/cold paths; mishandling either breaks the visual story.",
+    "successCriteria": [
+      "Layout flows left to right, not top to bottom.",
+      "Classed node retains its style hint (or a documented graceful fallback).",
+      "Three nodes import in the source order."
+    ]
+  },
+  {
+    "id": "gold-flowchart-long-chain",
+    "fixtureName": "flowchart-long-chain",
+    "priority": "p2",
+    "failureModes": ["node_sizing_readability_drift", "rank_order_drift"],
+    "userImpact": "Long linear chains are common in CI/CD and onboarding flows; any reshuffle breaks the obvious step-by-step read.",
+    "successCriteria": [
+      "Six steps remain in original order.",
+      "Each step has a single inbound and outbound edge (except endpoints).",
+      "Total bounding box does not balloon disproportionately."
+    ]
   }
 ]

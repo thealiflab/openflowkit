@@ -638,4 +638,27 @@ E--No-->C`;
     expect(result.nodes.length).toBeGreaterThan(0);
     expect(result.diagnostics?.some((message) => message.includes('Unclosed flowchart block detected'))).toBe(true);
   });
+
+  it('preserves ampersand inside quoted labels instead of treating it as fan-out', () => {
+    const input = `
+      flowchart TD
+      A["User & Auth"] --> B[Done]
+    `;
+    const result = parseMermaid(input);
+    const labels = result.nodes.map((node) => node.data.label);
+    expect(labels).toContain('User & Auth');
+    expect(result.edges).toHaveLength(1);
+    expect(result.edges[0].source).toBe('A');
+    expect(result.edges[0].target).toBe('B');
+  });
+
+  it('still expands unquoted ampersand fan-out edges', () => {
+    const input = `
+      flowchart TD
+      A --> B & C
+    `;
+    const result = parseMermaid(input);
+    expect(result.edges).toHaveLength(2);
+    expect(result.edges.map((edge) => edge.target).sort()).toEqual(['B', 'C']);
+  });
 });

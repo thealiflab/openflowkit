@@ -33,6 +33,7 @@ interface ShortcutHandlers {
   onAnnotationColorShortcut?: (color: 'yellow' | 'green' | 'blue' | 'pink' | 'violet' | 'orange') => void;
   onClearSelection?: () => void;
   onNudge?: (dx: number, dy: number) => void;
+  onTogglePinPositionShortcut?: () => void;
 }
 
 export function useKeyboardShortcuts({
@@ -67,6 +68,7 @@ export function useKeyboardShortcuts({
   onAnnotationColorShortcut,
   onClearSelection,
   onNudge,
+  onTogglePinPositionShortcut,
 }: ShortcutHandlers): void {
   useEffect(() => {
     function isEditableElement(element: EventTarget | null): boolean {
@@ -126,6 +128,11 @@ export function useKeyboardShortcuts({
         if (key === 'h') {
           e.preventDefault();
           onPanMode?.();
+        }
+        // Pin/unpin selected node positions so they survive auto-layout.
+        if (key === 'p' && onTogglePinPositionShortcut) {
+          e.preventDefault();
+          onTogglePinPositionShortcut();
         }
       }
 
@@ -315,5 +322,5 @@ export function useKeyboardShortcuts({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedNodeId, selectedEdgeId, selectedNodeType, deleteNode, deleteEdge, undo, redo, canUndo, canRedo, onUndoUnavailable, onRedoUnavailable, duplicateNode, selectAll, onAddMindmapChildShortcut, onAddMindmapSiblingShortcut, onCommandBar, onSearch, onShortcutsHelp, onSelectMode, onPanMode, onFitView, onZoomIn, onZoomOut, onCopy, onPaste, onCopyStyle, onPasteStyle, onQuickCreateShortcut, onAnnotationColorShortcut, onClearSelection, onNudge]);
+  }, [selectedNodeId, selectedEdgeId, selectedNodeType, deleteNode, deleteEdge, undo, redo, canUndo, canRedo, onUndoUnavailable, onRedoUnavailable, duplicateNode, selectAll, onAddMindmapChildShortcut, onAddMindmapSiblingShortcut, onCommandBar, onSearch, onShortcutsHelp, onSelectMode, onPanMode, onFitView, onZoomIn, onZoomOut, onCopy, onPaste, onCopyStyle, onPasteStyle, onQuickCreateShortcut, onAnnotationColorShortcut, onClearSelection, onNudge, onTogglePinPositionShortcut]);
 }

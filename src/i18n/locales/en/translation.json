@@ -325,7 +325,8 @@
     "analytics": "Analytics",
     "about": "About",
     "brand": "Brand Settings",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "Keyboard Shortcuts",
@@ -948,6 +949,10 @@
       "routingProfileStandard": "Standard",
       "routingProfileInfrastructure": "Infrastructure",
       "routingProfileHint": "Infrastructure mode biases orthogonal routes for service maps.",
+      "edgeStyleCurved": "Curved",
+      "edgeStyleRounded": "Rounded",
+      "edgeStyleSharp": "Sharp",
+      "edgeStyleStraight": "Straight",
       "edgeBundling": "Bundle Sibling Edges",
       "edgeBundlingDesc": "Keep parallel connections on shared lanes",
       "mermaidImportMode": "Mermaid Import Mode",
@@ -1439,5 +1444,38 @@
   },
   "sidebar": {
     "close": "Close sidebar"
+  },
+  "mcpSettings": {
+    "title": "Connect AI tools (MCP)",
+    "intro": "Add the OpenFlowKit MCP server to Claude Desktop, Cursor, Windsurf, or any MCP client. Your assistant uses its own model to author diagrams, while OpenFlowKit supplies local validation, templates, icon lookup, codebase analysis, and viewer links.",
+    "installHeading": "Install the server",
+    "installNote": "Requires Node 18+. No global install needed — npx fetches on demand.",
+    "configHeading": "Add to your AI assistant",
+    "configPathLabel": "Add to",
+    "configRestartNote": "restart the client after saving.",
+    "copyConfig": "Copy MCP config",
+    "copyInstall": "Copy install command",
+    "keysNote": "No API keys needed. Your AI client already has the model; this server adds diagram-specific tools.",
+    "toolsHeading": "Tools your assistant will use",
+    "docsLink": "Full MCP documentation",
+    "copy": "Copy",
+    "copied": "Copied",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "Tools",
+    "statClients": "Clients",
+    "statTransport": "stdio",
+    "statTransportLabel": "Transport",
+    "stepsLabel": "Setup steps",
+    "clientPicker": "AI assistant",
+    "toolsIntro": "These are the capabilities your AI assistant gains. It picks one automatically based on your request.",
+    "footerNote": "Need to debug a connection or build a custom client?",
+    "tryItHeading": "Try it with a prompt",
+    "tryItIntro": "Paste these into your AI assistant. The install prompt asks an agentic client (Cursor, Claude Code, Windsurf) to write the config for you; the test prompt verifies the connection.",
+    "installPromptLabel": "Install prompt",
+    "installPromptHint": "For Cursor / Claude Code / Windsurf agents",
+    "testPromptLabel": "Test prompt",
+    "testPromptHint": "Paste into any connected client",
+    "copyInstallPrompt": "Copy install prompt",
+    "copyTestPrompt": "Copy test prompt"
   }
 }

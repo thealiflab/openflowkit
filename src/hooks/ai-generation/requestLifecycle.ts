@@ -155,7 +155,25 @@ export async function generateAIFlowResult({
     } catch (parseErr) {
       if (attempt === 1) throw parseErr;
       const msg = parseErr instanceof Error ? parseErr.message : 'DSL syntax error';
-      activePrompt = `${fullPrompt}\n\nFIX REQUIRED: Previous output had a DSL error: "${msg}". Output ONLY valid OpenFlow DSL — no prose, no markdown fences.`;
+      // Show the model its own broken output verbatim so it can see what
+      // went wrong rather than re-deriving from the prompt. Truncate to keep
+      // the repair request under the context limit on small local models.
+      const brokenSnippet = dslText.length > 4000
+        ? `${dslText.slice(0, 4000)}\n…(truncated)`
+        : dslText;
+      activePrompt = [
+        fullPrompt,
+        '',
+        'PREVIOUS ATTEMPT FAILED TO PARSE.',
+        `Parser error: "${msg}"`,
+        '',
+        'Your previous output was:',
+        '```',
+        brokenSnippet,
+        '```',
+        '',
+        'Return the corrected OpenFlow DSL only — no prose, no markdown fences. Fix only the parse error; keep everything else identical.',
+      ].join('\n');
       onRetry?.(3);
     }
   }

@@ -109,6 +109,9 @@ export interface NodeCanvasMetadata {
   rotation?: number;
   width?: number;
   height?: number;
+  // When true, auto-layout treats this node as a fixed anchor — its position is
+  // preserved and other nodes are arranged around it.
+  pinned?: boolean;
 }
 
 export interface ClassNodeData {
@@ -294,6 +297,8 @@ export interface EdgeData {
     x: number;
     y: number;
   }[];
+  /** Visual curve interpolation override (basis, linear, smoothstep, ...). Falls back to diagram-level setting. */
+  curve?: import('@/components/custom-edge/edgeCurve').EdgeCurve;
   animation?: EdgeAnimationConfig;
 }
 
@@ -302,6 +307,11 @@ export interface GlobalEdgeOptions {
   animated: boolean;
   strokeWidth: number; // 1-5
   color?: string; // Optional override
+  /**
+   * Diagram-wide edge curve. When set, overrides the legacy `type` mapping for the
+   * visual interpolation pass (Mermaid-parity smoothing through ELK waypoints).
+   */
+  curve?: import('@/components/custom-edge/edgeCurve').EdgeCurve;
 }
 
 export type FlowEdge = LegacyEdge<EdgeData>;

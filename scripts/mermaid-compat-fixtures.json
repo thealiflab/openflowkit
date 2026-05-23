@@ -334,5 +334,61 @@
     "expectedOfficial": "invalid",
     "expectedEditableGate": "invalid_source",
     "source": "A --> B"
+  },
+  {
+    "name": "flowchart-cycle-loop",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[Receive] --> B[Process]\nB --> C[Verify]\nC --> A"
+  },
+  {
+    "name": "flowchart-self-loop",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[Retry Until Success] --> A\nA --> B[Done]"
+  },
+  {
+    "name": "flowchart-wide-branching",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nRoot[Dispatcher] --> C1[Worker 1]\nRoot --> C2[Worker 2]\nRoot --> C3[Worker 3]\nRoot --> C4[Worker 4]\nRoot --> C5[Worker 5]\nRoot --> C6[Worker 6]"
+  },
+  {
+    "name": "flowchart-quoted-special-chars",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[\"Hello, world!\"] --> B[\"User & Auth\"]\nB --> C[\"Done.\"]"
+  },
+  {
+    "name": "flowchart-edge-styles-mixed",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[Start] ==> B[Primary]\nB --> C[Default]\nC -.-> D[Async]\nD --- E[Connector]"
+  },
+  {
+    "name": "flowchart-parallel-edges",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[Client] -->|GET| B[Server]\nA -->|POST| B"
+  },
+  {
+    "name": "flowchart-direction-LR-with-classes",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart LR\nclassDef hot fill:#fee2e2,stroke:#dc2626\nA[Ingest]:::hot --> B[Transform]\nB --> C[Sink]"
+  },
+  {
+    "name": "flowchart-long-chain",
+    "family": "flowchart",
+    "expectedOfficial": "valid",
+    "expectedEditableGate": "supported_family",
+    "source": "flowchart TD\nA[Step 1] --> B[Step 2]\nB --> C[Step 3]\nC --> D[Step 4]\nD --> E[Step 5]\nE --> F[Step 6]"
   }
 ]

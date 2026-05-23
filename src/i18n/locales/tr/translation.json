@@ -325,7 +325,8 @@
     "privacy": "Gizlilik",
     "themeLight": "Açık",
     "themeDark": "Koyu",
-    "themeSystem": "Sistem"
+    "themeSystem": "Sistem",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "Klavye Kısayolları",
@@ -880,7 +881,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "Eğri",
+      "edgeStyleRounded": "Yuvarlatılmış",
+      "edgeStyleSharp": "Keskin",
+      "edgeStyleStraight": "Düz"
     },
     "ai": {
       "provider": "Sağlayıcı",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "AI araçlarını bağla (MCP)",
+    "intro": "OpenFlowKit MCP sunucusunu Claude Desktop, Cursor, Windsurf veya herhangi bir MCP istemcisine ekle. Asistanın yerel olarak çalışan diyagram araçları kazanır, API anahtarı gerekmez, veri makinenden çıkmaz.",
+    "installHeading": "Sunucuyu kur",
+    "installNote": "Node 18+ gerekir. Global kurulum gerekmez, npx isteğe bağlı indirir.",
+    "configHeading": "AI asistanına ekle",
+    "configPathLabel": "Şuna ekle",
+    "configRestartNote": "Kaydettikten sonra istemciyi yeniden başlat.",
+    "copyConfig": "MCP yapılandırmasını kopyala",
+    "copyInstall": "Kurulum komutunu kopyala",
+    "keysNote": "API anahtarı gerekmez. AI istemcin araçları kendi modeliyle çalıştırır.",
+    "toolsHeading": "Asistanının kullanacağı araçlar",
+    "docsLink": "Tam MCP belgeleri",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "Araçlar",
+    "statClients": "İstemciler",
+    "statTransport": "stdio",
+    "statTransportLabel": "Taşıma",
+    "stepsLabel": "Kurulum adımları",
+    "clientPicker": "AI asistanı",
+    "toolsIntro": "Bunlar AI asistanının kazandığı yeteneklerdir. İsteğine göre otomatik olarak birini seçer.",
+    "footerNote": "Bir bağlantıyı hata ayıklamak veya özel istemci kurmak ister misin?",
+    "tryItHeading": "Bir prompt ile dene",
+    "tryItIntro": "Bunları AI asistanına yapıştır. Kurulum promptu, ajansal bir istemciden (Cursor, Claude Code, Windsurf) yapılandırmayı senin için yazmasını ister; test promptu bağlantıyı doğrular.",
+    "installPromptLabel": "Kurulum promptu",
+    "installPromptHint": "Cursor / Claude Code / Windsurf ajanları için",
+    "testPromptLabel": "Test promptu",
+    "testPromptHint": "Bağlı herhangi bir istemciye yapıştır",
+    "copyInstallPrompt": "Kurulum promptunu kopyala",
+    "copyTestPrompt": "Test promptunu kopyala"
   }
 }

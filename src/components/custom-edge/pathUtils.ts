@@ -29,6 +29,12 @@ import type {
     MinimalEdge,
     MinimalNode,
 } from './pathUtilsTypes';
+import {
+    buildCurvedPath,
+    curveFromLegacyVariant,
+    isSmoothCurve,
+    type EdgeCurve,
+} from './edgeCurve';
 
 const EDGE_ROUTING_FAST_PATH_THRESHOLD = 600;
 
@@ -82,6 +88,7 @@ export function buildEdgePath(
             options.mermaidTargetContainer,
             targetNode?.data?.shape
         );
+        const resolvedCurve: EdgeCurve = options.curve ?? curveFromLegacyVariant(variant);
         const interactionLowDetailModeActive = isEdgeInteractionLowDetailModeActive();
         const graphRoutingFastPathActive = interactionLowDetailModeActive || allEdges.length >= EDGE_ROUTING_FAST_PATH_THRESHOLD;
         const pairOffset = graphRoutingFastPathActive || useMermaidPreservedEndpointRouting
@@ -172,7 +179,24 @@ export function buildEdgePath(
             // Coordinate mismatch detected — fall through to smoothstep routing below.
         }
 
-        if (shouldUseElkRoute) {
+        // If the user (or layout) moved a node, the cached ELK corridor no longer
+        // matches the current source/target. Following a stale corridor with a
+        // smooth curve looks broken — far worse than dropping to a clean cubic
+        // bezier from the live endpoints. Threshold is conservative (60px) so
+        // small adjustments still benefit from ELK's routing.
+        const STALE_ELK_THRESHOLD_PX = 60;
+        const elkPointsAreStale = (() => {
+            if (!options.elkPoints || options.elkPoints.length === 0) return false;
+            const first = options.elkPoints[0];
+            const last = options.elkPoints[options.elkPoints.length - 1];
+            const sourceDrift = Math.hypot(first.x - params.sourceX, first.y - params.sourceY);
+            const targetDrift = Math.hypot(last.x - params.targetX, last.y - params.targetY);
+            return sourceDrift > STALE_ELK_THRESHOLD_PX || targetDrift > STALE_ELK_THRESHOLD_PX;
+        })();
+        const useElkRouteForRender = shouldUseElkRoute
+            && !(elkPointsAreStale && isSmoothCurve(resolvedCurve) && !effectiveForceOrthogonal);
+
+        if (useElkRouteForRender) {
             const points = options.elkPoints;
             const adjustedSource = applyAnchorClearance(
                 { x: params.sourceX, y: params.sourceY },
@@ -189,7 +213,13 @@ export function buildEdgePath(
                 params.sourcePosition,
                 params.targetPosition
             );
-            const pathStr = buildRoundedPolylinePath(allPoints, 20);
+            // forceOrthogonal (e.g. mermaid-preserved endpoints, relation semantics)
+            // must keep the corridor's right-angles even when the diagram's curve
+            // setting is smooth, so only honor smooth curves when not forced.
+            const smoothedPath = (!effectiveForceOrthogonal && isSmoothCurve(resolvedCurve))
+                ? buildCurvedPath(allPoints, resolvedCurve)
+                : null;
+            const pathStr = smoothedPath ?? buildRoundedPolylinePath(allPoints, 20);
             const { x: labelX, y: labelY } = getElkLabelPosition(adjustedSource.x, adjustedSource.y, points);
 
             return withBundledLabelOffset(pathStr, labelX, labelY, params, labelBundleOffset);
@@ -242,8 +272,11 @@ export function buildEdgePath(
         if (manualWaypoints.length > 0) {
             const pathPoints = [{ x: sourceX, y: sourceY }, ...manualWaypoints, { x: targetX, y: targetY }];
             const midpoint = getPathMidpoint(pathPoints);
+            const smoothedManual = (!effectiveForceOrthogonal && isSmoothCurve(resolvedCurve))
+                ? buildCurvedPath(pathPoints, resolvedCurve)
+                : null;
             return withBundledLabelOffset(
-                buildRoundedPolylinePath(pathPoints, 20),
+                smoothedManual ?? buildRoundedPolylinePath(pathPoints, 20),
                 midpoint.x,
                 midpoint.y,
                 params,
@@ -251,7 +284,12 @@ export function buildEdgePath(
             );
         }
 
-        if (variant === 'bezier' && !effectiveForceOrthogonal) {
+        // Curve-driven fallback: when no ELK corridor is available (newly-dragged
+        // edges, manual connections without waypoints, fresh nodes), the resolved
+        // curve setting decides the visual instead of the legacy `variant` flag.
+        // Smooth curves => cubic bezier through endpoints; orthogonal step curves
+        // => rounded smoothstep; linear => straight line.
+        if (!effectiveForceOrthogonal && isSmoothCurve(resolvedCurve)) {
             if (isMindmapBranch) {
                 return withBundledLabelOffset(
                     ...(() => {
@@ -264,6 +302,8 @@ export function buildEdgePath(
                     labelBundleOffset
                 );
             }
+            // For Mermaid-parity we use a slightly looser cubic bezier than the
+            // React Flow default; mirrors Mermaid's `curveBasis` softness.
             const [edgePath, labelX, labelY] = getBezierPath({
                 sourceX,
                 sourceY,
@@ -271,7 +311,31 @@ export function buildEdgePath(
                 targetX,
                 targetY,
                 targetPosition: params.targetPosition,
-                curvature: 0.25,
+                curvature: 0.35,
+            });
+            return withBundledLabelOffset(edgePath, labelX, labelY, params, labelBundleOffset);
+        }
+
+        if (resolvedCurve === 'linear') {
+            const [edgePath, labelX, labelY] = getStraightPath({
+                sourceX,
+                sourceY,
+                targetX,
+                targetY,
+            });
+            return withBundledLabelOffset(edgePath, labelX, labelY, params, labelBundleOffset);
+        }
+
+        if (resolvedCurve === 'step' || resolvedCurve === 'stepBefore' || resolvedCurve === 'stepAfter') {
+            const [edgePath, labelX, labelY] = getSmoothStepPath({
+                sourceX,
+                sourceY,
+                sourcePosition: params.sourcePosition,
+                targetX,
+                targetY,
+                targetPosition: params.targetPosition,
+                borderRadius: 0,
+                offset: 20,
             });
             return withBundledLabelOffset(edgePath, labelX, labelY, params, labelBundleOffset);
         }

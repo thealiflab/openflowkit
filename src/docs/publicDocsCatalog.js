@@ -27,6 +27,7 @@ export const PUBLIC_DOC_SECTIONS = [
       { title: 'Studio Overview', slug: 'studio-overview' },
       { title: 'AI Generation', slug: 'ai-generation' },
       { title: 'Ask Flowpilot', slug: 'ask-flowpilot' },
+      { title: 'MCP Server', slug: 'mcp-server' },
       { title: 'Smart Layout', slug: 'smart-layout' },
       { title: 'Playback & History', slug: 'playback-history' },
       { title: 'Snapshots & Recovery', slug: 'snapshots-recovery' },

@@ -124,4 +124,34 @@ describe('requestLifecycle', () => {
     expect(calledPrompt).toContain('FOCUSED EDIT');
     expect(calledPrompt).toContain('Login');
   });
+
+  it('retries with the broken DSL embedded when the first parse fails', async () => {
+    const composer = await import('./graphComposer');
+    vi.mocked(composer.parseDslOrThrow)
+      .mockImplementationOnce(() => {
+        throw new Error('Unexpected token at line 2');
+      })
+      .mockImplementationOnce(() => ({
+        nodes: [{ id: 'generated-a', type: 'process', position: { x: 0, y: 0 }, data: { label: 'A' } }],
+        edges: [],
+      }));
+    vi.mocked(generateDiagramFromChat)
+      .mockResolvedValueOnce('flow: "broken\n[bad syntax')
+      .mockResolvedValueOnce('flow: "A"');
+
+    await generateAIFlowResult({
+      chatMessages: [],
+      prompt: 'Login flow',
+      nodes: [],
+      edges: [],
+      aiSettings: BASE_AI_SETTINGS,
+      globalEdgeOptions: BASE_EDGE_OPTIONS,
+    });
+
+    expect(generateDiagramFromChat).toHaveBeenCalledTimes(2);
+    const repairPrompt = vi.mocked(generateDiagramFromChat).mock.calls[1][1];
+    expect(repairPrompt).toContain('PREVIOUS ATTEMPT FAILED TO PARSE');
+    expect(repairPrompt).toContain('Unexpected token at line 2');
+    expect(repairPrompt).toContain('[bad syntax');
+  });
 });

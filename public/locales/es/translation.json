@@ -305,7 +305,8 @@
     "privacy": "Privacidad",
     "themeLight": "Claro",
     "themeDark": "Oscuro",
-    "themeSystem": "Sistema"
+    "themeSystem": "Sistema",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "Atajos de teclado",
@@ -860,7 +861,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "Curva",
+      "edgeStyleRounded": "Redondeada",
+      "edgeStyleSharp": "Aguda",
+      "edgeStyleStraight": "Recta"
     },
     "ai": {
       "provider": "Proveedor",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "Conectar herramientas de IA (MCP)",
+    "intro": "Añade el servidor MCP de OpenFlowKit a Claude Desktop, Cursor, Windsurf o cualquier cliente MCP. Tu asistente gana herramientas de diagramación que se ejecutan localmente, sin claves de API, sin que tus datos salgan de tu máquina.",
+    "installHeading": "Instalar el servidor",
+    "installNote": "Requiere Node 18+. Sin instalación global, npx descarga bajo demanda.",
+    "configHeading": "Añadir a tu asistente de IA",
+    "configPathLabel": "Añadir a",
+    "configRestartNote": "reinicia el cliente tras guardar.",
+    "copyConfig": "Copiar configuración MCP",
+    "copyInstall": "Copiar comando de instalación",
+    "keysNote": "No se necesitan claves de API. Tu cliente de IA usa su propio modelo para activar las herramientas.",
+    "toolsHeading": "Herramientas que usará tu asistente",
+    "docsLink": "Documentación completa de MCP",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "Herramientas",
+    "statClients": "Clientes",
+    "statTransport": "stdio",
+    "statTransportLabel": "Transporte",
+    "stepsLabel": "Pasos de configuración",
+    "clientPicker": "Asistente de IA",
+    "toolsIntro": "Estas son las capacidades que obtiene tu asistente de IA. Elige una automáticamente según tu petición.",
+    "footerNote": "¿Necesitas depurar una conexión o crear un cliente personalizado?",
+    "tryItHeading": "Pruébalo con un prompt",
+    "tryItIntro": "Pega esto en tu asistente de IA. El prompt de instalación pide a un cliente agéntico (Cursor, Claude Code, Windsurf) que escriba la configuración por ti; el de prueba verifica la conexión.",
+    "installPromptLabel": "Prompt de instalación",
+    "installPromptHint": "Para agentes Cursor / Claude Code / Windsurf",
+    "testPromptLabel": "Prompt de prueba",
+    "testPromptHint": "Pega en cualquier cliente conectado",
+    "copyInstallPrompt": "Copiar prompt de instalación",
+    "copyTestPrompt": "Copiar prompt de prueba"
   }
 }

@@ -47,6 +47,7 @@ export type AIProvider =
   | 'cerebras'
   | 'mistral'
   | 'openrouter'
+  | 'ollama'
   | 'custom';
 
 export type AISettingsStorageMode = 'local' | 'session';

@@ -7,6 +7,8 @@ export const PROVIDER_BASE_URLS: Record<Exclude<AIProvider, 'gemini' | 'claude' 
     cerebras: 'https://api.cerebras.ai/v1',
     mistral: 'https://api.mistral.ai/v1',
     openrouter: 'https://openrouter.ai/api/v1',
+    // Ollama exposes an OpenAI-compatible endpoint at /v1 on the local daemon.
+    ollama: 'http://localhost:11434/v1',
 };
 
 export const DEFAULT_MODELS: Record<AIProvider, string> = {
@@ -18,6 +20,7 @@ export const DEFAULT_MODELS: Record<AIProvider, string> = {
     cerebras: 'gpt-oss-120b',
     mistral: 'mistral-large-latest',
     openrouter: 'google/gemini-2.5-pro',
+    ollama: 'llama3.2',
     custom: 'gpt-4o',
 };
 
@@ -121,11 +124,25 @@ export const PROVIDERS: ProviderMeta[] = [
         name: 'OpenRouter',
         icon: '↔',
         color: '#111827',
-        logoPath: '/logos/custom.svg',
+        logoPath: '/logos/openrouter.svg',
         keyPlaceholder: 'sk-or-v1-...',
         keyLink: 'https://openrouter.ai/settings/keys',
         consoleName: 'OpenRouter Dashboard',
         defaultModel: getDefaultModel('openrouter'),
+    },
+    {
+        id: 'ollama',
+        name: 'Ollama (local)',
+        icon: '⌘',
+        color: '#0f172a',
+        logoPath: '/logos/ollama.svg',
+        // Ollama ignores the Authorization header; users can leave the key blank
+        // and we send a placeholder. This preserves the rest of the OpenAI-compatible
+        // request pipeline without special-casing it.
+        keyPlaceholder: 'leave blank',
+        keyLink: 'https://ollama.com/download',
+        consoleName: 'Ollama (localhost:11434)',
+        defaultModel: getDefaultModel('ollama'),
     },
     {
         id: 'custom',
@@ -193,6 +210,13 @@ export const PROVIDER_MODELS: Record<AIProvider, { id: string; translateKey: str
         { id: 'anthropic/claude-sonnet-4', translateKey: 'anthropic/claude-sonnet-4' },
         { id: 'deepseek/deepseek-chat-v3.1', translateKey: 'deepseek/deepseek-chat-v3.1' },
     ],
+    ollama: [
+        { id: 'llama3.2', translateKey: 'llama3.2' },
+        { id: 'llama3.1', translateKey: 'llama3.1' },
+        { id: 'qwen2.5-coder', translateKey: 'qwen2.5-coder' },
+        { id: 'mistral', translateKey: 'mistral' },
+        { id: 'gemma3', translateKey: 'gemma3' },
+    ],
     custom: [
         { id: 'custom', translateKey: 'custom' },
     ],
@@ -212,6 +236,7 @@ export const DEFAULT_BASE_URLS: Record<Exclude<AIProvider, 'gemini' | 'claude'>,
     cerebras: PROVIDER_BASE_URLS.cerebras,
     mistral: PROVIDER_BASE_URLS.mistral,
     openrouter: PROVIDER_BASE_URLS.openrouter,
+    ollama: PROVIDER_BASE_URLS.ollama,
     custom: 'https://api.example.com/v1',
 };
 
@@ -226,5 +251,8 @@ export const PROVIDER_RISK: Record<AIProvider, ProviderRisk> = {
     nvidia: 'proxy_likely',
     cerebras: 'mixed',
     mistral: 'mixed',
+    // Ollama runs on localhost; CORS is the user's responsibility (start with
+    // OLLAMA_ORIGINS=* or run a reverse proxy) but no remote risk applies.
+    ollama: 'browser_friendly',
     custom: 'mixed',
 };

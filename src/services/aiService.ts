@@ -14,7 +14,7 @@ import {
     parseOpenAIStreamDelta,
 } from './aiServiceSchemas';
 
-export type AIProvider = 'gemini' | 'openai' | 'claude' | 'groq' | 'nvidia' | 'cerebras' | 'mistral' | 'openrouter' | 'custom';
+export type AIProvider = 'gemini' | 'openai' | 'claude' | 'groq' | 'nvidia' | 'cerebras' | 'mistral' | 'openrouter' | 'ollama' | 'custom';
 
 interface AiServiceError {
     code:
@@ -38,6 +38,7 @@ function getEnvApiKey(provider: AIProvider): string | undefined {
         case 'cerebras': return import.meta.env.VITE_CEREBRAS_API_KEY;
         case 'mistral': return import.meta.env.VITE_MISTRAL_API_KEY;
         case 'openrouter': return import.meta.env.VITE_OPENROUTER_API_KEY;
+        case 'ollama': return import.meta.env.VITE_OLLAMA_API_KEY;
         case 'custom': return import.meta.env.VITE_CUSTOM_AI_API_KEY;
         default: return undefined;
     }
@@ -52,6 +53,11 @@ function historyToMessages(history: ChatMessage[]): TextMessage[] {
 
 function resolveApiKey(provider: AIProvider, apiKeySetting?: string): string {
     const apiKey = apiKeySetting || getEnvApiKey(provider);
+    // Ollama runs locally and ignores Authorization; let users leave the key
+    // blank and send a placeholder so the OpenAI-compatible pipeline still works.
+    if (!apiKey && provider === 'ollama') {
+        return 'ollama';
+    }
     if (!apiKey) {
         throw new Error('API key is missing. Add it in Settings → AI or in your .env.local file.');
     }

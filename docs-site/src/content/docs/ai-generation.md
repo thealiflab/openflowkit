@@ -40,6 +40,7 @@ Typical generation flow:
 
 The app supports multiple BYOK providers, including:
 
+- Ollama
 - Gemini
 - OpenAI
 - Claude
@@ -50,7 +51,7 @@ The app supports multiple BYOK providers, including:
 - OpenRouter
 - Custom OpenAI-compatible endpoint
 
-This matters because you are not locked to one hosted AI vendor or one billing model.
+This matters because you are not locked to one hosted AI vendor or one billing model. Ollama can run locally with no API key when its daemon and model are available.
 
 API keys stay browser-local. Persistent keys can be stored for reuse on the current device, and session-only mode is available when you do not want the key to survive the browser session.
 
@@ -98,6 +99,7 @@ AI output should be treated as a draft, not a certified system model. For docume
 ## Related pages
 
 - [Ask Flowpilot](/ask-flowpilot/)
+- [MCP Server](/mcp-server/)
 - [Studio Overview](/studio-overview/)
 - [Choose an Input Mode](/choose-input-mode/)
 - [Prompting AI Agents](/prompting-agents/)

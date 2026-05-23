@@ -23,6 +23,7 @@ import {
   validateMermaidWithOfficialParser,
 } from '@/services/mermaid/officialMermaidValidation';
 import { parseMermaidByType } from '@/services/mermaid/parseMermaidByType';
+import { parseMermaidDirectives } from '@/services/mermaid/parseMermaidDirectives';
 import { enrichNodesWithIcons } from '@/lib/nodeEnricher';
 import { normalizeNodeIconData } from '@/lib/nodeIconState';
 import type { LayoutOptions } from '@/services/elk-layout/types';
@@ -209,6 +210,11 @@ export function useFlowCanvasPaste({
 
               setNodes(canvasImport.nodes);
               setEdges(canvasImport.edges);
+
+              const pasteDirectives = parseMermaidDirectives(pastedText);
+              if (pasteDirectives.flowchartCurve) {
+                useFlowStore.getState().setGlobalEdgeOptions({ curve: pasteDirectives.flowchartCurve });
+              }
 
               const shouldSurfaceDiagnostics =
                 diagnostics.length > 0

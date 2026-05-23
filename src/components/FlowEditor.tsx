@@ -17,6 +17,8 @@ import { useCanvasActions } from '@/store/canvasHooks';
 import { useTabActions } from '@/store/tabHooks';
 import { parseMermaidByType } from '@/services/mermaid/parseMermaidByType';
 import { importMermaidToCanvas } from '@/services/mermaid/rendererFirstImport';
+import { parseMermaidDirectives } from '@/services/mermaid/parseMermaidDirectives';
+import { useFlowStore } from '@/store';
 import { resolveLayoutDirection } from '@/components/flow-canvas/pasteHelpers';
 import { buildMermaidDiagnosticsSnapshot } from '@/services/mermaid/diagnosticsSnapshot';
 import { normalizeParseDiagnostics } from '@/services/mermaid/diagnosticFormatting';
@@ -111,6 +113,13 @@ export function FlowEditor({ onGoHome }: FlowEditorProps) {
     recordHistory();
     setNodes(editableImport.nodes);
     setEdges(editableImport.edges);
+    // Apply Mermaid directive config (frontmatter / %%{init}%% — currently the
+    // flowchart curve is the only knob we honor). Mermaid's default curve is
+    // 'basis'; we only override when the user wrote one explicitly.
+    const directives = parseMermaidDirectives(mermaidRecoverySource ?? '');
+    if (directives.flowchartCurve) {
+      useFlowStore.getState().setGlobalEdgeOptions({ curve: directives.flowchartCurve });
+    }
     if (parsed.diagramType) {
       updateTab(activePageId, { diagramType: parsed.diagramType });
     }

@@ -1,6 +1,7 @@
 import type { Node } from '@/lib/reactflowCompat';
 import type { NodeData } from '@/lib/types';
 import { createProviderIconData, normalizeNodeIconData } from '@/lib/nodeIconState';
+import { getIconAssetNodeMinSize } from '@/components/nodeHelpers';
 
 export type DomainLibraryCategory = 'aws' | 'azure' | 'gcp' | 'cncf' | 'developer' | 'network' | 'security' | 'c4' | 'icons';
 
@@ -86,12 +87,13 @@ export function createDomainLibraryNode(
             archIconShapeId: item.archIconShapeId,
             layerId,
         });
+        const { minWidth, minHeight } = getIconAssetNodeMinSize(Boolean(item.label?.trim()));
         return {
             id,
             type: 'custom',
             position,
             data,
-            style: { width: 96 },
+            style: { width: minWidth, height: minHeight },
         };
     }
 

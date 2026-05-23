@@ -9,9 +9,9 @@
 
 <h1>OpenFlowKit</h1>
 
-<h3>The open-source diagramming studio builders actually want to use.</h3>
+<h3>The open-source diagramming studio for builders.</h3>
 
-<p>Create flows from templates, code, structured imports, or AI. Refine them visually, keep them local-first, and export — including as a <b>cinematic animated video</b> that no other open-source tool offers.</p>
+<p>Create flows from templates, code, structured imports, or AI. Refine them visually, keep them local-first, and export as <b>Cinematic MP4 walkthroughs</b> and via the first <b>MCP server</b> for any OSS diagramming tool.</p>
 
 <br/>
 
@@ -56,10 +56,17 @@
 <table>
 <tr>
 <td align="center"><b>✨ Mermaid → Icons</b><br/><sub>Paste Mermaid · 1,600+ icons<br/>auto-assigned · beautiful</sub></td>
-<td align="center"><b>🤖 AI Generation</b><br/><sub>9 providers · BYOK<br/>Direct-to-canvas output</sub></td>
+<td align="center"><b>🤖 AI Generation</b><br/><sub>10 providers inc. local Ollama<br/>Direct-to-canvas output</sub></td>
 <td align="center"><b>`{}` Diagram as Code</b><br/><sub>Bidirectional live sync<br/>Git-friendly DSL</sub></td>
 <td align="center"><b>🧩 Asset Libraries</b><br/><sub>Developer · AWS · Azure<br/>GCP · CNCF · Icons</sub></td>
-<td align="center"><b>🎬 Cinematic Export</b><br/><sub>Animated video & GIF<br/>No upload required</sub></td>
+<td align="center"><b>🎬 Cinematic MP4</b><br/><sub>WebCodecs H.264<br/>Faster-than-realtime</sub></td>
+</tr>
+<tr>
+<td align="center"><b>🧷 Anchored Layout</b><br/><sub>Pin nodes — auto-layout<br/>rearranges around them</sub></td>
+<td align="center"><b>🪄 MCP Server</b><br/><sub>Drive from Claude Desktop,<br/>Cursor, Windsurf</sub></td>
+<td align="center"><b>⚡ Worker Layout</b><br/><sub>ELK runs off main thread<br/>UI stays responsive</sub></td>
+<td align="center"><b>🦙 Local AI</b><br/><sub>Ollama localhost preset<br/>fully offline diagramming</sub></td>
+<td align="center"><b>♻️ Self-Correcting AI</b><br/><sub>Bad DSL → AI sees its own<br/>output and repairs it</sub></td>
 </tr>
 </table>
 
@@ -101,25 +108,26 @@ Every diagramming tool makes a compromise. OpenFlowKit doesn't.
 | **Lucidchart / Miro**   | Cloud lock-in — expensive, account required, your data lives on their servers |
 | **PlantUML**            | Server-dependent rendering — no visual editor, no local-first model           |
 
-OpenFlowKit is the **only MIT-licensed tool** that combines a real workspace home, a professional visual canvas, bidirectional diagram-as-code, AI generation from 9 providers, **automatic icon assignment from 1,100+ tech icons**, and cinematic animated export — with zero server-side storage.
+OpenFlowKit is the **only MIT-licensed tool** that combines a real workspace home, a professional visual canvas, bidirectional diagram-as-code, AI generation from 10 providers (including fully-local Ollama), **automatic icon assignment from 1,600+ tech icons**, anchored auto-layout, hardware-encoded cinematic MP4 export, and a Model Context Protocol server so Claude / Cursor / Windsurf can drive it directly — all with zero server-side storage.
 
 ---
 
 ## Feature highlights
 
-|                                      | OpenFlowKit | Excalidraw | Draw.io | Mermaid | Lucidchart |
-| ------------------------------------ | :---------: | :--------: | :-----: | :-----: | :--------: |
-| Visual canvas editor                 |     ✅      |     ✅     |   ✅    |   ❌    |     ✅     |
-| Bidirectional diagram-as-code        |     ✅      |     ❌     |   ❌    |   ✅    |     ❌     |
-| AI generation (9 providers) `Beta`   |     ✅      |     ❌     |   ❌    |   ❌    |  Limited   |
-| Mermaid import (8 types)             |     ✅      |     ❌     |   ⚠️    |   ✅    |     ❌     |
-| Auto-icon assignment (1,600+)        |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
-| AWS / Azure / GCP / CNCF icons       |     ✅      |     ❌     |   ✅    | Partial |     ✅     |
-| Real-time collaboration (P2P) `Beta` |     ✅      |     ✅     |   ❌    |   ❌    | ✅ (cloud) |
-| Cinematic animated export            |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
-| Figma export (editable SVG)          |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
-| No account required                  |     ✅      |     ✅     |   ✅    |   ✅    |     ❌     |
-| Open source (MIT)                    |     ✅      |     ✅     |   ✅    |   ✅    |     ❌     |
+|                                       | OpenFlowKit | Excalidraw | Draw.io | Mermaid | Lucidchart |
+| ------------------------------------- | :---------: | :--------: | :-----: | :-----: | :--------: |
+| Visual canvas editor                  |     ✅      |     ✅     |   ✅    |   ❌    |     ✅     |
+| Bidirectional diagram-as-code         |     ✅      |     ❌     |   ❌    |   ✅    |     ❌     |
+| AI generation (10 providers + Ollama) |     ✅      |     ❌     |   ❌    |   ❌    |  Limited   |
+| Mermaid import (8 types)              |     ✅      |     ❌     |   ⚠️    |   ✅    |     ❌     |
+| Auto-icon assignment (1,600+)         |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
+| AWS / Azure / GCP / CNCF icons        |     ✅      |     ❌     |   ✅    | Partial |     ✅     |
+| Anchored auto-layout (pin nodes)      |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
+| Cinematic MP4 export (WebCodecs)      |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
+| MCP server (Claude / Cursor agent)    |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
+| Figma export (editable SVG)           |     ✅      |     ❌     |   ❌    |   ❌    |     ❌     |
+| No account required                   |     ✅      |     ✅     |   ✅    |   ✅    |     ❌     |
+| Open source (MIT)                     |     ✅      |     ✅     |   ✅    |   ✅    |     ❌     |
 
 ---
 
@@ -142,7 +150,7 @@ Paste this → you get the Express wordmark, PostgreSQL elephant, Redis logo, an
 
 1. **Paste Mermaid** on the canvas or in the code panel
 2. **Semantic classifier** detects technology names (PostgreSQL, Redis, Express, Lambda, etc.)
-3. **Icon matcher** searches 1,100+ icons across all catalogs — exact match, then alias, then substring
+3. **Icon matcher** searches 1,600+ icons across all catalogs — exact match, then alias, then substring
 4. **Enricher** assigns colors, icons, and provider SVGs to every node
 5. **ELK layout** arranges everything cleanly
 
@@ -162,7 +170,7 @@ Describe your system in plain English. AI generates a diagram on the canvas with
 | "AWS Lambda → SQS → DynamoDB"             | 3 nodes with AWS icons                  |
 | "React frontend → Express → MongoDB → S3" | 4 nodes across developer + AWS catalogs |
 
-9 providers supported: Google Gemini, OpenAI, Anthropic Claude, Groq, Mistral, NVIDIA NIM, Cerebras, OpenRouter, or any custom OpenAI-compatible endpoint.
+10 providers supported: Google Gemini, OpenAI, Anthropic Claude, Groq, Mistral, NVIDIA NIM, Cerebras, OpenRouter, **Ollama (fully local)**, or any custom OpenAI-compatible endpoint. Bad DSL from any provider is now auto-repaired — the model sees its own broken output and the parser error, then returns corrected DSL in a single follow-up turn.
 
 ---
 
@@ -181,10 +189,11 @@ That means the app does not create a fake default flow just to get you onto the 
 
 Flowpilot sits directly in the editor. Describe a system, paste source code, upload a screenshot, or ask it to refine what's already on the canvas. Your API key is stored in your browser and sent directly to the provider — OpenFlowKit's servers never see it.
 
-**9 providers. Bring your own key. Switch any time.**
+**10 providers. Bring your own key. Switch any time. One runs entirely on your laptop.**
 
 | Provider            | Default model                              | Why use it                                      |
 | ------------------- | ------------------------------------------ | ----------------------------------------------- |
+| 🦙 **Ollama (local)** | `llama3.2`                               | **Fully offline.** No key, no network, no cost. |
 | Google Gemini       | `gemini-2.5-flash-lite`                    | Free tier available, fast, browser-safe         |
 | OpenAI              | `gpt-5-mini`                               | Best reasoning for complex architectures        |
 | Anthropic Claude    | `claude-sonnet-4-6`                        | Excellent code and system understanding         |
@@ -193,7 +202,7 @@ Flowpilot sits directly in the editor. Describe a system, paste source code, upl
 | NVIDIA NIM          | `meta/llama-4-maverick-17b-128e-instruct`  | Enterprise GPU inference                        |
 | Cerebras            | `gpt-oss-120b`                             | Ultra-fast on WSE-3 silicon                     |
 | OpenRouter          | `google/gemini-2.5-pro`                    | Access 300+ models through one key              |
-| **Custom endpoint** | Any model                                  | Ollama, LM Studio, or any OpenAI-compatible API |
+| **Custom endpoint** | Any model                                  | LM Studio, vLLM, or any OpenAI-compatible API   |
 
 No proxy. No middleman. Direct browser-to-provider requests.
 
@@ -249,7 +258,7 @@ Large diagrams also get better organization with multi-page documents, layers, s
 
 ---
 
-## 🎬 Cinematic Export — a USP no other open-source tool has
+## 🎬 Cinematic Export — hardware-encoded MP4, no other OSS tool ships this
 
 Turn any diagram into an animated video walkthrough — node by node, edge by edge — entirely in your browser. No upload, no server, no third-party tool.
 
@@ -257,7 +266,33 @@ Designed for architecture reviews, onboarding docs, and demos where a static ima
 
 > **No other open-source diagramming tool does this.**
 
-Export as **WebM or MP4** (browser-native, no codec install needed), control animation speed, and share or embed anywhere.
+On modern browsers (Chrome / Edge / Safari 16.4+ / Firefox 130+) OpenFlowKit encodes via **WebCodecs `VideoEncoder` + an in-browser MP4 muxer** — H.264 baseline, hardware-accelerated, **faster than real-time**, deterministic frame timing. No more dropped frames under load. MediaRecorder remains a fallback for older browsers, so the feature is purely additive.
+
+---
+
+## 🪄 MCP Server — drive OpenFlowKit from Claude Desktop, Cursor, Windsurf
+
+The **first Model Context Protocol server for any OSS diagramming tool.** Point any MCP client at the [`@openflowkit/mcp-server`](mcp-server/) package and your AI assistant gains provider-free diagramming tools. The client already has an LLM, so OpenFlowKit MCP supplies local validation, codebase analysis, templates, icon lookup, and viewer links instead of asking for another provider key.
+
+```json
+{
+  "mcpServers": {
+    "openflowkit": {
+      "command": "npx",
+      "args": ["-y", "@openflowkit/mcp-server"]
+    }
+  }
+}
+```
+
+Then ask Claude: *"Read the OpenFlowKit DSL cheatsheet, create a checkout flow with a promo-code branch and a Stripe webhook step, validate it, and create a viewer URL."* The DSL comes back in seconds and stays editable in OpenFlowKit.
+
+- **8 provider-free tools** — validate DSL, create viewer URLs, analyze codebases, find icon slugs, fetch starter templates, and inspect capabilities
+- **5 resources** — DSL cheatsheet, template catalog, template bodies, full icon catalog, and per-provider icon catalogs
+- **3 prompts** — flowchart creation, Mermaid conversion, and codebase architecture, all using the client model
+- **Pure Node, zero infra cost** — runs on the user's machine, ships via npm
+
+Full setup, tool table, and workflow details in [`mcp-server/README.md`](mcp-server/README.md).
 
 ---
 
@@ -275,9 +310,11 @@ Build your diagram once. Take it anywhere.
 
 ---
 
-## Real-time collaboration — local-first by default
+## Local-first by default — your data, your machine
 
-Local-first stays the default. Your saved flows live in the browser, your AI keys stay on your device, and export is explicit. When you do want to work together, OpenFlowKit supports P2P collaboration over WebRTC with live presence and shared editing, without making a hosted backend mandatory for solo work.
+Local-first is the default. Your saved flows live in your browser's IndexedDB. Your AI keys stay on your device — every request goes directly from your browser to the provider you chose. Exports are explicit and run entirely client-side. No accounts, no telemetry, no server-side storage.
+
+> Real-time P2P collaboration over WebRTC exists in the codebase as an opt-in beta (set `VITE_COLLABORATION_ENABLED=true`). It is off by default while we redesign the signaling path for production reliability — the local-first experience does not depend on it.
 
 ---
 
@@ -290,6 +327,7 @@ Local-first stays the default. Your saved flows live in the browser, your AI key
 | `⌘ Z` / `Ctrl Z` | Full undo with complete history                           |
 | `⌘ D` / `Ctrl D` | Duplicate selection                                       |
 | `⌘ G` / `Ctrl G` | Group selected nodes                                      |
+| `P`              | Pin / unpin selected nodes (anchored layout)              |
 | `⌘ /` / `Ctrl /` | Keyboard shortcuts reference                              |
 
 Plus: smart alignment guides, snap-to-grid, multi-select, pages, layers, sections, architecture lint, light/dark/system theme, and full i18n in 7 languages.
@@ -298,15 +336,25 @@ Plus: smart alignment guides, snap-to-grid, multi-select, pages, layers, section
 
 ## What we are improving next
 
+Recently shipped (latest milestone):
+
+- ✅ **WebCodecs H.264 MP4 export** — faster-than-realtime, hardware-accelerated, deterministic
+- ✅ **MCP server** — `@openflowkit/mcp-server` for Claude Desktop, Cursor, Windsurf, any MCP client
+- ✅ **Anchored layout** — pin nodes so auto-layout arranges around them
+- ✅ **Ollama provider** — fully offline diagramming, no API key, no cost
+- ✅ **AI self-correction loop** — bad DSL → AI sees its own output + parser error → returns corrected DSL
+- ✅ **ELK in a Web Worker** — layout no longer blocks the UI thread
+- ✅ **Flowchart corpus 12 → 20 fixtures** with explicit known-gap pinning
+
 Current roadmap focus:
 
-- **GIF export for cinematic animations** — WebM/MP4 ship today; GIF export for zero-conversion embeds is next
-- **GitHub repo → diagram** — currently in beta internally; will ship when output quality is consistent across real-world codebases
+- **`render_to_svg` MCP tool** — headless SVG render so AI clients can see the diagram, not just code
+- **GIF export for cinematic animations** — MP4 ships today; GIF export for zero-conversion embeds is next
+- **Mermaid family coverage** — gantt, c4, timeline, gitGraph, sankey, quadrant (view + edit-as-code)
+- **Mac / Linux / Windows desktop app** — Tauri shell wrapping the existing web app
 - better layers and page workflows for larger technical diagrams
-- stronger code and structured-import diagram quality
 - smarter auto-layout defaults with less cleanup after import
 - performance boosts for bigger canvases and heavier sessions
-- continued docs and onboarding cleanup so the product surfaces stay easier to understand
 
 ---
 
@@ -351,18 +399,20 @@ No database. No secrets. No infrastructure. One folder, or one container.
 
 ## Tech stack
 
-| Layer         | Technology                          |
-| ------------- | ----------------------------------- |
-| Framework     | React 19 + TypeScript 5             |
-| Build         | Vite 6                              |
-| Canvas        | React Flow (XYFlow)                 |
-| Auto-layout   | ELK.js                              |
-| State         | Zustand                             |
-| Storage       | IndexedDB — local-first, no backend |
-| Styling       | Tailwind CSS                        |
-| Collaboration | WebRTC (P2P, no relay server)       |
-| i18n          | react-i18next — 7 languages         |
-| Testing       | Vitest + Playwright                 |
+| Layer         | Technology                                                |
+| ------------- | --------------------------------------------------------- |
+| Framework     | React 19 + TypeScript 5                                   |
+| Build         | Vite 6                                                    |
+| Canvas        | React Flow (XYFlow)                                       |
+| Auto-layout   | ELK.js — runs in a Web Worker, off the main thread        |
+| Video export  | WebCodecs `VideoEncoder` + `mp4-muxer` (MediaRecorder fallback) |
+| State         | Zustand                                                   |
+| Storage       | IndexedDB — local-first, no backend                       |
+| Styling       | Tailwind CSS                                              |
+| Agent surface | `@openflowkit/mcp-server` — Model Context Protocol stdio  |
+| Collaboration | WebRTC P2P (opt-in, off by default)                       |
+| i18n          | react-i18next — 7 languages                               |
+| Testing       | Vitest + Playwright                                       |
 
 ---
 
@@ -417,7 +467,7 @@ No cloud required. No account required. No lock-in.
 <br/>
 
 <sub>
-React 19 &nbsp;·&nbsp; TypeScript 5 &nbsp;·&nbsp; Vite 6 &nbsp;·&nbsp; XYFlow &nbsp;·&nbsp; ELK.js &nbsp;·&nbsp; Zustand &nbsp;·&nbsp; Yjs &nbsp;·&nbsp; Framer Motion &nbsp;·&nbsp; Tailwind CSS &nbsp;·&nbsp; Cloudflare Pages
+React 19 &nbsp;·&nbsp; TypeScript 5 &nbsp;·&nbsp; Vite 6 &nbsp;·&nbsp; XYFlow &nbsp;·&nbsp; ELK.js (worker) &nbsp;·&nbsp; WebCodecs + mp4-muxer &nbsp;·&nbsp; MCP SDK &nbsp;·&nbsp; Zustand &nbsp;·&nbsp; Yjs &nbsp;·&nbsp; Framer Motion &nbsp;·&nbsp; Tailwind CSS &nbsp;·&nbsp; Cloudflare Pages
 </sub>
 
 <br/>

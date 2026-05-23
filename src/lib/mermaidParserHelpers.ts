@@ -431,6 +431,36 @@ function parseEdgeLabelSegment(
   return { label: label.trim(), nextIndex: index };
 }
 
+function splitOnUnquotedAmpersand(input: string): string[] {
+  const parts: string[] = [];
+  let current = '';
+  let quoteChar: string | null = null;
+  let bracketDepth = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    const char = input[i];
+    if (quoteChar) {
+      if (char === quoteChar && input[i - 1] !== '\\') quoteChar = null;
+      current += char;
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quoteChar = char;
+      current += char;
+      continue;
+    }
+    if (char === '[' || char === '(' || char === '{') bracketDepth += 1;
+    else if (char === ']' || char === ')' || char === '}') bracketDepth = Math.max(0, bracketDepth - 1);
+    if (char === '&' && bracketDepth === 0) {
+      parts.push(current);
+      current = '';
+      continue;
+    }
+    current += char;
+  }
+  parts.push(current);
+  return parts;
+}
+
 function expandAmpersandEdges(line: string): string[] {
   if (!line.includes('&')) return [line];
   const arrowMatch = findArrowInLine(line);
@@ -445,8 +475,11 @@ function expandAmpersandEdges(line: string): string[] {
   const label = labelMatch ? `|${labelMatch[1]}|` : '';
   const targetPart = labelMatch ? labelMatch[2].trim() : afterArrow;
 
-  const sources = sourcePart.split('&').map((s) => s.trim()).filter(Boolean);
-  const targets = targetPart.split('&').map((s) => s.trim()).filter(Boolean);
+  // Only split on `&` when it sits outside any quoted label or shape bracket —
+  // otherwise an `&` inside a label (e.g. "User & Auth") gets mistaken for the
+  // fan-out separator and the label is destroyed.
+  const sources = splitOnUnquotedAmpersand(sourcePart).map((s) => s.trim()).filter(Boolean);
+  const targets = splitOnUnquotedAmpersand(targetPart).map((s) => s.trim()).filter(Boolean);
 
   if (sources.length <= 1 && targets.length <= 1) return [line];
 

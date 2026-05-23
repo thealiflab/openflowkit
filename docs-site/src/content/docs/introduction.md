@@ -25,6 +25,7 @@ If you are evaluating OpenFlowKit quickly, start with one of these:
 - paste Mermaid or OpenFlow DSL and keep editing on the canvas
 - start from a developer-oriented template when structure matters more than exact content
 - use Flowpilot when you need a fast architecture draft from code or a prompt
+- connect the MCP server when you want Claude Desktop, Cursor, Windsurf, or another MCP client to generate, validate, convert, or revise OpenFlowKit diagrams
 
 ## Core product surfaces
 
@@ -75,4 +76,5 @@ OpenFlowKit now treats the home screen as the workspace listing surface and the 
 - Read [Import from Structured Data](/import-from-data/) if you already have SQL, OpenAPI, code, or infra text.
 - Read [Choose an Input Mode](/choose-input-mode/) if you are deciding between templates, import, AI, and diagram-as-code.
 - Read [Studio Overview](/studio-overview/) for the AI, code, import, and lint flows.
+- Read [MCP Server](/mcp-server/) to drive OpenFlowKit from AI coding clients.
 - Read [Templates & Asset Libraries](/templates-assets/) for starter flows and reusable visual libraries.

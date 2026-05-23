@@ -21,6 +21,15 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // Collapse the per-SVG `?url` lazy stubs (1600+ icons) into a small
+            // number of bucketed chunks, one per provider pack. Without this,
+            // Vite emits one tiny JS module per icon and Cloudflare Pages
+            // upload chokes on the file count.
+            if (id.includes('/assets/third-party-icons/') && id.includes('.svg')) {
+              const match = id.match(/assets\/third-party-icons\/([^/]+)\//);
+              return match ? `icon-urls-${match[1]}` : 'icon-urls';
+            }
+
             if (!id.includes('node_modules')) {
               return undefined;
             }
@@ -30,6 +39,10 @@ export default defineConfig(() => {
             }
 
             if (id.includes('/node_modules/elkjs/')) {
+              // Split the in-process fallback (elk.bundled) from the worker-mode API
+              // so production loads only the small api shim; the bundled engine is
+              // fetched only when the worker path is unavailable.
+              if (id.includes('elk.bundled')) return 'vendor-elk-bundled';
               return 'vendor-elk';
             }
 
@@ -72,7 +85,7 @@ export default defineConfig(() => {
       setupFiles: './vitest.setup.ts',
       testTimeout: 10000,
       maxWorkers: 2,
-      exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
+      exclude: ['e2e/**', 'node_modules/**', 'dist/**', 'mcp-server/**'],
       coverage: {
         provider: 'v8',
         reporter: ['text', 'lcov'],

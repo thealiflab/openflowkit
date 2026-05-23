@@ -224,4 +224,25 @@ describe('useKeyboardShortcuts', () => {
 
     expect(onAnnotationColorShortcut).toHaveBeenCalledWith('blue');
   });
+
+  it('toggles pin position on bare P', () => {
+    const onTogglePinPositionShortcut = vi.fn();
+    renderShortcuts({ onTogglePinPositionShortcut });
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
+
+    expect(onTogglePinPositionShortcut).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not toggle pin while focused in an editable field', () => {
+    const onTogglePinPositionShortcut = vi.fn();
+    renderShortcuts({ onTogglePinPositionShortcut });
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.focus();
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
+
+    expect(onTogglePinPositionShortcut).not.toHaveBeenCalled();
+  });
 });

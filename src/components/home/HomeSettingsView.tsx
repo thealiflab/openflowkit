@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { AISettings } from '../SettingsModal/AISettings';
 import { CanvasSettings } from '../SettingsModal/CanvasSettings';
 import { GeneralSettings } from '../SettingsModal/GeneralSettings';
+import { MCPSettings } from '../SettingsModal/MCPSettings';
 import { ShortcutsSettings } from '../SettingsModal/ShortcutsSettings';
 import { SidebarItem } from '../ui/SidebarItem';
 
-type HomeSettingsTab = 'general' | 'canvas' | 'shortcuts' | 'ai';
+type HomeSettingsTab = 'general' | 'canvas' | 'shortcuts' | 'ai' | 'mcp';
 
 interface HomeSettingsViewProps {
     activeSettingsTab: HomeSettingsTab;
@@ -23,6 +24,7 @@ export function HomeSettingsView({
         { key: 'general', label: t('settings.general', 'General') },
         { key: 'canvas', label: t('settings.canvas', 'Canvas') },
         { key: 'ai', label: t('settings.ai', FLOWPILOT_NAME) },
+        { key: 'mcp', label: t('settings.mcp', 'MCP') },
         { key: 'shortcuts', label: t('settings.shortcuts', 'Shortcuts') },
     ];
 
@@ -34,6 +36,8 @@ export function HomeSettingsView({
                 return <CanvasSettings />;
             case 'ai':
                 return <AISettings />;
+            case 'mcp':
+                return <MCPSettings />;
             case 'shortcuts':
                 return <ShortcutsSettings />;
         }

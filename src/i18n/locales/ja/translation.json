@@ -305,7 +305,8 @@
     "privacy": "プライバシー",
     "themeLight": "ライト",
     "themeDark": "ダーク",
-    "themeSystem": "システム"
+    "themeSystem": "システム",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "キーボードショートカット",
@@ -860,7 +861,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "曲線",
+      "edgeStyleRounded": "角丸",
+      "edgeStyleSharp": "鋭角",
+      "edgeStyleStraight": "直線"
     },
     "ai": {
       "provider": "プロバイダー",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "AIツールを接続（MCP）",
+    "intro": "OpenFlowKit MCP サーバーを Claude Desktop、Cursor、Windsurf、その他の MCP クライアントに追加します。アシスタントはローカルで動く図表ツールを獲得します。API キーは不要、データはマシンから外に出ません。",
+    "installHeading": "サーバーをインストール",
+    "installNote": "Node 18+ が必要です。グローバルインストールは不要、npx が必要に応じて取得します。",
+    "configHeading": "AI アシスタントに追加",
+    "configPathLabel": "追加先",
+    "configRestartNote": "保存後にクライアントを再起動してください。",
+    "copyConfig": "MCP 設定をコピー",
+    "copyInstall": "インストールコマンドをコピー",
+    "keysNote": "API キーは不要です。あなたの AI クライアント自身のモデルがツールを動かします。",
+    "toolsHeading": "アシスタントが使うツール",
+    "docsLink": "完全な MCP ドキュメント",
+    "copy": "コピー",
+    "copied": "コピー済み",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "ツール",
+    "statClients": "クライアント",
+    "statTransport": "stdio",
+    "statTransportLabel": "トランスポート",
+    "stepsLabel": "セットアップ手順",
+    "clientPicker": "AI アシスタント",
+    "toolsIntro": "これらが AI アシスタントに与えられる機能です。リクエストに応じて自動的に選択されます。",
+    "footerNote": "接続のデバッグやカスタムクライアントの構築は？",
+    "tryItHeading": "プロンプトで試す",
+    "tryItIntro": "これらを AI アシスタントに貼り付けてください。インストールプロンプトはエージェント型クライアント（Cursor、Claude Code、Windsurf）に設定の書き込みを依頼し、テストプロンプトは接続を確認します。",
+    "installPromptLabel": "インストールプロンプト",
+    "installPromptHint": "Cursor / Claude Code / Windsurf エージェント用",
+    "testPromptLabel": "テストプロンプト",
+    "testPromptHint": "接続済みの任意のクライアントに貼り付け",
+    "copyInstallPrompt": "インストールプロンプトをコピー",
+    "copyTestPrompt": "テストプロンプトをコピー"
   }
 }

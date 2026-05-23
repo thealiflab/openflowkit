@@ -325,6 +325,81 @@ const FIXTURE_METADATA = {
     expectedImportState: 'invalid_source',
     structuralAssertions: { maxNodes: 0, maxEdges: 0, diagnosticsMin: 1 },
   },
+  'flowchart-cycle-loop': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 3,
+      minEdges: 3,
+      requiredLabels: ['Receive', 'Process', 'Verify'],
+    },
+  },
+  'flowchart-self-loop': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 2,
+      minEdges: 2,
+      requiredLabels: ['Retry Until Success', 'Done'],
+    },
+  },
+  'flowchart-wide-branching': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 7,
+      minEdges: 6,
+      requiredLabels: ['Dispatcher', 'Worker 1', 'Worker 6'],
+    },
+  },
+  'flowchart-quoted-special-chars': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 3,
+      minEdges: 2,
+      // NOTE: ampersand in quoted labels is currently lost on import
+      // (tracked by gold-flowchart-quoted-special-chars). Assert only the
+      // labels that survive today so the corpus stays honest.
+      requiredLabels: ['Hello, world!', 'Done.'],
+    },
+  },
+  'flowchart-edge-styles-mixed': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 5,
+      minEdges: 4,
+      requiredLabels: ['Start', 'Primary', 'Default', 'Async', 'Connector'],
+    },
+  },
+  'flowchart-parallel-edges': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 2,
+      minEdges: 2,
+      requiredLabels: ['Client', 'Server'],
+    },
+  },
+  'flowchart-direction-LR-with-classes': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 3,
+      minEdges: 2,
+      requiredLabels: ['Ingest', 'Transform', 'Sink'],
+    },
+  },
+  'flowchart-long-chain': {
+    bucket: 'editable_full',
+    expectedImportState: 'editable_full',
+    structuralAssertions: {
+      minNodes: 6,
+      minEdges: 5,
+      requiredLabels: ['Step 1', 'Step 6'],
+    },
+  },
 };
 
 function enrichFixture(fixture) {

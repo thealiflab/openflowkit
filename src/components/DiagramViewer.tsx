@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { deflate, inflate } from 'pako';
 import { ReactFlow, Background, Controls, BackgroundVariant, ReactFlowProvider } from '@/lib/reactflowCompat';
 import { ExternalLink, AlertTriangle, Loader2 } from 'lucide-react';
 import { parseDslOrThrow } from '@/hooks/ai-generation/graphComposer';
@@ -7,6 +8,23 @@ import { getElkLayout } from '@/services/elkLayout';
 import { flowCanvasNodeTypes, flowCanvasEdgeTypes } from './flow-canvas/flowCanvasTypes';
 import { OpenFlowLogo } from './icons/OpenFlowLogo';
 import type { FlowNode, FlowEdge } from '@/lib/types';
+
+const PAKO_PREFIX = '~';
+
+function fromBase64Url(s: string): Uint8Array {
+    const pad = s.length % 4 === 0 ? '' : '='.repeat(4 - (s.length % 4));
+    const b64 = s.replace(/-/g, '+').replace(/_/g, '/') + pad;
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+}
+
+function toBase64Url(bytes: Uint8Array): string {
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
 type ParsedGraph = ReturnType<typeof parseDslOrThrow>;
 type ViewerSize = 'badge' | 'card' | 'full';
@@ -16,6 +34,10 @@ type LayoutState =
     | { status: 'ready'; nodes: FlowNode[]; edges: FlowEdge[] };
 
 function decodeDsl(encoded: string): string {
+    if (encoded.startsWith(PAKO_PREFIX)) {
+        const bytes = fromBase64Url(encoded.slice(PAKO_PREFIX.length));
+        return new TextDecoder().decode(inflate(bytes));
+    }
     return decodeURIComponent(atob(encoded));
 }
 
@@ -154,7 +176,8 @@ export function DiagramViewer(): React.ReactElement {
     );
 }
 
-/** Encode a DSL string to a viewer URL param. */
+/** Encode a DSL string to a viewer URL param (deflate + base64url, `~`-prefixed). */
 export function encodeDslForViewer(dsl: string): string {
-    return btoa(encodeURIComponent(dsl));
+    const compressed = deflate(new TextEncoder().encode(dsl), { level: 9 });
+    return PAKO_PREFIX + toBase64Url(compressed);
 }

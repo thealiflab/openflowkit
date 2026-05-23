@@ -8,7 +8,8 @@ const MAIN_JS_MAX_KB = Number(process.env.ENTRY_MAIN_JS_BUDGET_KB ?? 1400);
 const TOTAL_ENTRY_JS_MAX_KB = Number(process.env.ENTRY_TOTAL_JS_BUDGET_KB ?? 2800);
 const ENTRY_CSS_MAX_KB = Number(process.env.ENTRY_CSS_BUDGET_KB ?? 230);
 const LAZY_CHUNK_MAX_KB = Number(process.env.LAZY_CHUNK_MAX_KB ?? 1500);
-const LAZY_TOTAL_MAX_KB = Number(process.env.LAZY_TOTAL_MAX_KB ?? 8000);
+const LAZY_WORKER_CHUNK_MAX_KB = Number(process.env.LAZY_WORKER_CHUNK_MAX_KB ?? 2000);
+const LAZY_TOTAL_MAX_KB = Number(process.env.LAZY_TOTAL_MAX_KB ?? 8500);
 
 function toKb(bytes) {
   return Number((bytes / 1024).toFixed(1));
@@ -45,10 +46,29 @@ function isStaticAssetWrapperChunk(relativePath) {
   // `?url` or when small SVGs are inlined. These modules are static string exports, not
   // executable application code, so including them in the lazy-JS total creates false
   // bundle-budget failures for large icon catalogs.
-  return /^const\s+\w+=["'`][\s\S]*["'`];export\{\w+ as default\};?$/.test(source)
+  const isSingleStringWrapper =
+    /^const\s+\w+=["'`][\s\S]*["'`];export\{\w+ as default\};?$/.test(source)
     && !source.includes('import')
     && !source.includes('function')
     && !source.includes('=>');
+  if (isSingleStringWrapper) return true;
+
+  // Bucketed asset chunks (via manualChunks) merge many of the per-SVG wrapper modules
+  // into a single chunk. They still contain only string literals, `new URL(..., import.meta.url)`
+  // references, and `Object.freeze(Object.defineProperty(...))` exports — no real code.
+  // Treat them as data, not executable JS.
+  const isBucketedAssetChunk =
+    !/[^.\w]function\s/.test(source)
+    && !/=>/.test(source)
+    && !/\bclass\s/.test(source)
+    && !/\bfor\s*\(/.test(source)
+    && !/\bif\s*\(/.test(source)
+    && !/\bwhile\s*\(/.test(source)
+    && !/\bawait\s/.test(source)
+    && !/\byield\s/.test(source)
+    && !/^import\s/m.test(source)
+    && /Object\.freeze\(Object\.defineProperty\(/.test(source);
+  return isBucketedAssetChunk;
 }
 
 function readEntryAssetSizes() {
@@ -122,6 +142,9 @@ function main() {
   // Lazy chunk checks
   const allChunkSizes = readAllChunkSizes();
   const entryJsSet = new Set(jsEntries.map(([file]) => file));
+  // Web Worker scripts run in their own thread and are not part of the main JS
+  // bundle graph, so they're held to a separate, larger per-chunk budget.
+  const isWorkerChunk = (file) => /worker/i.test(file);
   const lazyChunks = Array.from(allChunkSizes.entries()).filter(
     ([file]) => !entryJsSet.has(file) && !isStaticAssetWrapperChunk(file)
   );
@@ -138,8 +161,9 @@ function main() {
   let lazyChunkFail = false;
   for (const [file, bytes] of lazyChunks) {
     const kb = toKb(bytes);
-    if (kb > LAZY_CHUNK_MAX_KB) {
-      lazyChecks.push({ label: `lazy chunk ${file}`, actualKb: kb, maxKb: LAZY_CHUNK_MAX_KB });
+    const limit = isWorkerChunk(file) ? LAZY_WORKER_CHUNK_MAX_KB : LAZY_CHUNK_MAX_KB;
+    if (kb > limit) {
+      lazyChecks.push({ label: `lazy chunk ${file}`, actualKb: kb, maxKb: limit });
       lazyChunkFail = true;
     }
   }

@@ -292,7 +292,9 @@ export function useCinematicExport({
           stageLabel: 'Finalizing export…',
         }));
 
-        const extension = getAnimatedExportFileExtension(mimeType);
+        // Prefer the blob's actual MIME — when the encoder routes to WebCodecs
+        // it returns an MP4 regardless of the MediaRecorder mime passed in.
+        const extension = getAnimatedExportFileExtension(blob.type || mimeType);
         createDownload(
           blob,
           buildExportFileName(exportBaseName ?? 'openflowkit-cinematic-build', extension)
