@@ -23,6 +23,7 @@ These capabilities have been released and are documented in the docs:
 - **Workspace Home**: Create, open, import, and organize multiple flows
 - **Local-First Storage**: All diagrams saved in browser, survives refresh
 - **Flowpilot AI**: Generate diagrams from prompts
+- **MCP Server**: Drive OpenFlowKit from Claude Desktop, Cursor, Windsurf, and other MCP clients
 - **Mermaid Import**: Import and edit Mermaid diagrams
 - **OpenFlow DSL**: Text-based diagram definition language
 - **Infrastructure Sync**: Import Terraform, Kubernetes, Docker Compose

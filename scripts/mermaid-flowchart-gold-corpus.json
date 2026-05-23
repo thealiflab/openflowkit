@@ -105,7 +105,7 @@
       "Quoted labels render with their punctuation intact.",
       "Comma and period survive without HTML-entity escaping leaking through.",
       "Node identity remains stable across import.",
-      "KNOWN GAP: ampersand currently does not survive parse — tracked here so a future fix can verify by adding 'User & Auth' to the corpus assertions."
+      "Ampersand survives inside quoted labels (e.g. 'User & Auth') without being misread as a fan-out separator."
     ]
   },
   {

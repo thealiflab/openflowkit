@@ -8,14 +8,17 @@ import type { NodeData } from '@/lib/types';
 import { useCinematicExportState } from '@/context/CinematicExportContext';
 import { CustomEdgeWrapper } from './custom-edge/CustomEdgeWrapper';
 import { buildEdgePath } from './custom-edge/pathUtils';
+import { curveFromLegacyVariant, coerceEdgeCurve, type EdgeCurve } from './custom-edge/edgeCurve';
 import { shouldUseOrthogonalRelationRouting } from './custom-edge/relationRoutingSemantics';
 import { readMermaidImportedEdgeMetadata } from '@/services/mermaid/importProvenance';
 import { readMermaidImportedNodeMetadataFromData } from '@/services/mermaid/importProvenance';
+import { useFlowStore } from '@/store';
 
 function createEdgeRenderer(variant: 'bezier' | 'smoothstep' | 'step' | 'straight') {
     return function RenderEdge(props: LegacyEdgeProps<EdgeData>): React.ReactElement {
         const cinematicExportState = useCinematicExportState();
         const { getEdges, getNodes } = useReactFlow();
+        const diagramCurve = useFlowStore((state) => state.globalEdgeOptions.curve);
         const allEdges = getEdges() as FlowEdge[];
         const allNodes = getNodes();
         const currentEdge = allEdges.find((edge) => edge.id === props.id) as FlowEdge | undefined;
@@ -33,6 +36,13 @@ function createEdgeRenderer(variant: 'bezier' | 'smoothstep' | 'step' | 'straigh
             sourceNode,
             targetNode
         );
+        const perEdgeCurveRaw = (props.data as EdgeData | undefined)?.curve;
+        const perEdgeCurve: EdgeCurve | undefined = perEdgeCurveRaw
+            ? coerceEdgeCurve(perEdgeCurveRaw)
+            : undefined;
+        const resolvedCurve: EdgeCurve = perEdgeCurve
+            ?? diagramCurve
+            ?? curveFromLegacyVariant(variant);
         const { edgePath, labelX, labelY } = buildEdgePath(
             {
                 id: props.id,
@@ -70,6 +80,7 @@ function createEdgeRenderer(variant: 'bezier' | 'smoothstep' | 'step' | 'straigh
                   | undefined,
                 waypoints: props.data?.waypoints as { x: number; y: number }[] | undefined,
                 waypoint: props.data?.waypoint as { x: number; y: number } | undefined,
+                curve: resolvedCurve,
             }
         );
 

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { findStarterTemplate, STARTER_TEMPLATES } from '../lib/starterTemplates.js';
 import { toolError } from '../lib/errors.js';
+import { buildViewerUrl } from '../lib/viewerUrl.js';
 
 export function registerGetTemplate(server: McpServer): void {
   server.registerTool(
@@ -35,6 +36,7 @@ export function registerGetTemplate(server: McpServer): void {
                 title: template.title,
                 category: template.category,
                 summary: template.summary,
+                viewerUrl: buildViewerUrl(template.dsl),
               },
               null,
               2

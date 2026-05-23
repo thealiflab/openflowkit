@@ -39,4 +39,18 @@ describe('lintOpenFlowDsl', () => {
     expect(result.ok).toBe(true);
     expect(result.edgeCount).toBe(2);
   });
+
+  it('flags unsupported directions and node types as errors', () => {
+    const result = lintOpenFlowDsl(`flow: T\ndirection: BT\n[unknown] a: A`);
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.some((d) => d.message.includes('Unsupported direction'))).toBe(true);
+    expect(result.diagnostics.some((d) => d.message.includes('Unsupported node type'))).toBe(true);
+  });
+
+  it('warns when decision branches are missing or unlabeled', () => {
+    const result = lintOpenFlowDsl(`flow: T\n[decision] d: Q?\n[end] e: End\nd -> e`);
+    expect(result.ok).toBe(true);
+    expect(result.diagnostics.some((d) => d.message.includes('exactly two outgoing'))).toBe(true);
+    expect(result.diagnostics.some((d) => d.message.includes('unlabeled outgoing'))).toBe(true);
+  });
 });

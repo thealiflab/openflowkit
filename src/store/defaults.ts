@@ -75,7 +75,11 @@ export const INITIAL_VIEW_SETTINGS: ViewSettings = {
 };
 
 export const INITIAL_GLOBAL_EDGE_OPTIONS: GlobalEdgeOptions = {
-    type: 'smoothstep',
+    // Mermaid-parity default: smooth B-spline through the routing corridor.
+    // Matches Mermaid's `flowchart.curve = 'basis'` baseline so a fresh diagram
+    // looks like the Mermaid render users compare us against.
+    type: 'bezier',
+    curve: 'basis',
     animated: false,
     strokeWidth: 1.5,
 };

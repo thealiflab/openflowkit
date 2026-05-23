@@ -305,7 +305,8 @@
     "privacy": "Confidentialité",
     "themeLight": "Clair",
     "themeDark": "Sombre",
-    "themeSystem": "Système"
+    "themeSystem": "Système",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "Raccourcis clavier",
@@ -860,7 +861,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "Courbé",
+      "edgeStyleRounded": "Arrondi",
+      "edgeStyleSharp": "Angle vif",
+      "edgeStyleStraight": "Droit"
     },
     "ai": {
       "provider": "Fournisseur",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "Connecter des outils IA (MCP)",
+    "intro": "Ajoutez le serveur MCP OpenFlowKit à Claude Desktop, Cursor, Windsurf ou à tout client MCP. Votre assistant gagne des outils de diagramme qui tournent localement, aucune clé d’API requise, aucune donnée ne quitte votre machine.",
+    "installHeading": "Installer le serveur",
+    "installNote": "Nécessite Node 18+. Aucune installation globale, npx récupère à la demande.",
+    "configHeading": "Ajouter à votre assistant IA",
+    "configPathLabel": "Ajouter à",
+    "configRestartNote": "redémarrez le client après la sauvegarde.",
+    "copyConfig": "Copier la config MCP",
+    "copyInstall": "Copier la commande d’installation",
+    "keysNote": "Aucune clé d’API requise. Votre client IA utilise son propre modèle pour piloter les outils.",
+    "toolsHeading": "Outils que votre assistant utilisera",
+    "docsLink": "Documentation MCP complète",
+    "copy": "Copier",
+    "copied": "Copié",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "Outils",
+    "statClients": "Clients",
+    "statTransport": "stdio",
+    "statTransportLabel": "Transport",
+    "stepsLabel": "Étapes de configuration",
+    "clientPicker": "Assistant IA",
+    "toolsIntro": "Voici les capacités que gagne votre assistant IA. Il en choisit une automatiquement selon votre demande.",
+    "footerNote": "Besoin de déboguer une connexion ou de créer un client personnalisé ?",
+    "tryItHeading": "Essayez avec un prompt",
+    "tryItIntro": "Collez ceci dans votre assistant IA. Le prompt d’installation demande à un client agentique (Cursor, Claude Code, Windsurf) d’écrire la configuration pour vous ; le prompt de test vérifie la connexion.",
+    "installPromptLabel": "Prompt d’installation",
+    "installPromptHint": "Pour les agents Cursor / Claude Code / Windsurf",
+    "testPromptLabel": "Prompt de test",
+    "testPromptHint": "Collez dans n’importe quel client connecté",
+    "copyInstallPrompt": "Copier le prompt d’installation",
+    "copyTestPrompt": "Copier le prompt de test"
   }
 }

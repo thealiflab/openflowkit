@@ -25,10 +25,22 @@ export interface DslLintResult {
   hasHeader: boolean;
 }
 
+const VALID_NODE_TYPES = new Set([
+  'start',
+  'end',
+  'process',
+  'decision',
+  'system',
+  'architecture',
+  'browser',
+  'mobile',
+  'note',
+]);
+
 const NODE_TYPE_PATTERN = /^\s*\[([a-zA-Z_][a-zA-Z0-9_]*)\]\s+([a-zA-Z_][a-zA-Z0-9_]*)(?::|\s|$)/;
 const SIMPLE_NODE_PATTERN = /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*$/;
 const SHORT_NODE_PATTERN = /^\s*([a-zA-Z_][a-zA-Z0-9_]*):/;
-const EDGE_PATTERN = /([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:==>|-->|->|\.\.|---)\s*(?:\|[^|]*\|\s*)?([a-zA-Z_][a-zA-Z0-9_]*)/;
+const EDGE_PATTERN = /^([a-zA-Z_][a-zA-Z0-9_]*)\s*(==>|-->|->|\.\.|---)\s*(?:\|([^|]*)\|\s*)?([a-zA-Z_][a-zA-Z0-9_]*)$/;
 
 function isLikelyNodeDeclarationLine(line: string): boolean {
   const trimmed = line.trim();
@@ -44,6 +56,8 @@ function isLikelyEdgeLine(line: string): boolean {
 export function lintOpenFlowDsl(source: string): DslLintResult {
   const diagnostics: DslDiagnostic[] = [];
   const declaredNodeIds = new Set<string>();
+  const nodeTypes = new Map<string, string>();
+  const outgoingEdges = new Map<string, Array<{ label?: string; line: number }>>();
   const lines = source.split('\n');
   let edgeCount = 0;
 
@@ -61,12 +75,39 @@ export function lintOpenFlowDsl(source: string): DslLintResult {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) return;
 
+    if (trimmed.startsWith('direction:')) {
+      const direction = trimmed.slice('direction:'.length).trim();
+      if (direction !== 'TB' && direction !== 'LR') {
+        diagnostics.push({
+          severity: 'error',
+          message: `Unsupported direction "${direction}".`,
+          line: lineNumber,
+          snippet: trimmed,
+          hint: 'Use `direction: TB` or `direction: LR`.',
+        });
+      }
+      return;
+    }
+
     if (isLikelyNodeDeclarationLine(line)) {
       const typed = trimmed.match(NODE_TYPE_PATTERN);
       const shortColon = trimmed.match(SHORT_NODE_PATTERN);
       const bare = trimmed.match(SIMPLE_NODE_PATTERN);
       const id = typed?.[2] ?? shortColon?.[1] ?? bare?.[1];
       if (id) {
+        const type = typed?.[1];
+        if (type) {
+          if (!VALID_NODE_TYPES.has(type)) {
+            diagnostics.push({
+              severity: 'error',
+              message: `Unsupported node type "${type}".`,
+              line: lineNumber,
+              snippet: trimmed,
+              hint: `Use one of: ${[...VALID_NODE_TYPES].join(', ')}.`,
+            });
+          }
+          nodeTypes.set(id, type);
+        }
         if (declaredNodeIds.has(id)) {
           diagnostics.push({
             severity: 'warning',
@@ -108,7 +149,12 @@ export function lintOpenFlowDsl(source: string): DslLintResult {
       return;
     }
     edgeCount += 1;
-    const [, source, target] = match;
+    const [, source, , label, target] = match;
+    if (source) {
+      const edges = outgoingEdges.get(source) ?? [];
+      edges.push({ label: label?.trim(), line: lineNumber });
+      outgoingEdges.set(source, edges);
+    }
     for (const id of [source, target]) {
       if (id && !declaredNodeIds.has(id)) {
         diagnostics.push({
@@ -121,6 +167,28 @@ export function lintOpenFlowDsl(source: string): DslLintResult {
       }
     }
   });
+
+  for (const [id, type] of nodeTypes) {
+    if (type !== 'decision') continue;
+    const edges = outgoingEdges.get(id) ?? [];
+    if (edges.length !== 2) {
+      diagnostics.push({
+        severity: 'warning',
+        message: `Decision node "${id}" should have exactly two outgoing edges.`,
+        hint: 'Use two labeled branches, e.g. `decision ->|Yes| next` and `decision ->|No| other`.',
+      });
+    }
+    for (const edge of edges) {
+      if (!edge.label) {
+        diagnostics.push({
+          severity: 'warning',
+          message: `Decision node "${id}" has an unlabeled outgoing edge.`,
+          line: edge.line,
+          hint: 'Decision branches should use labels such as `Yes`, `No`, `Pass`, or `Fail`.',
+        });
+      }
+    }
+  }
 
   if (declaredNodeIds.size === 0) {
     diagnostics.push({

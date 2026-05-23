@@ -17,7 +17,6 @@ export const IMPORT_NODE_MAX_WIDTH = 320;
 
 const ELK_SECTION_PADDING = `[top=${SECTION_CONTENT_PADDING_TOP},left=${SECTION_PADDING_X},bottom=${SECTION_PADDING_BOTTOM},right=${SECTION_PADDING_X}]`;
 const ELK_COMPOUND_LAYOUT_OPTIONS = {
-  'elk.hierarchyHandling': 'INCLUDE_CHILDREN',
   'elk.algorithm': 'layered',
 } as const;
 
@@ -201,6 +200,79 @@ export function applyElkLayoutToNodes(
   });
 }
 
+function buildParentIdMap(
+  topLevelNodes: FlowNode[],
+  childrenByParent: Map<string, FlowNode[]>
+): Map<string, string | null> {
+  const parentById = new Map<string, string | null>();
+  function walk(node: FlowNode, parentId: string | null): void {
+    parentById.set(node.id, parentId);
+    for (const child of childrenByParent.get(node.id) ?? []) {
+      walk(child, node.id);
+    }
+  }
+  for (const node of topLevelNodes) walk(node, null);
+  return parentById;
+}
+
+function ancestorChain(
+  nodeId: string,
+  parentById: Map<string, string | null>
+): string[] {
+  const chain: string[] = [];
+  let cursor: string | null | undefined = nodeId;
+  while (cursor) {
+    chain.push(cursor);
+    cursor = parentById.get(cursor) ?? null;
+  }
+  return chain;
+}
+
+function lowestCommonAncestor(
+  sourceId: string,
+  targetId: string,
+  parentById: Map<string, string | null>
+): string | null {
+  const sourceAncestors = new Set(ancestorChain(sourceId, parentById));
+  for (const ancestor of ancestorChain(targetId, parentById)) {
+    if (sourceAncestors.has(ancestor)) return ancestor;
+  }
+  return null;
+}
+
+function attachEdgesAtLca(
+  root: ElkNode,
+  edges: FlowEdge[],
+  parentById: Map<string, string | null>
+): void {
+  const elkNodeById = new Map<string, ElkNode>();
+  function indexNodes(node: ElkNode): void {
+    elkNodeById.set(node.id, node);
+    node.children?.forEach(indexNodes);
+  }
+  root.children?.forEach(indexNodes);
+
+  const edgesByOwner = new Map<string | null, ElkExtendedEdge[]>();
+  for (const edge of edges) {
+    const lca = lowestCommonAncestor(edge.source, edge.target, parentById);
+    // If endpoints share a compound parent, attach the edge there; otherwise
+    // place it at the root. ELK crashes with INCLUDE_CHILDREN when an edge
+    // sits above its LCA in the hierarchy.
+    const ownerId = lca && elkNodeById.has(lca) && lca !== edge.source && lca !== edge.target
+      ? lca
+      : null;
+    const bucket = edgesByOwner.get(ownerId) ?? [];
+    bucket.push({ id: edge.id, sources: [edge.source], targets: [edge.target] });
+    edgesByOwner.set(ownerId, bucket);
+  }
+
+  for (const [ownerId, ownerEdges] of edgesByOwner) {
+    const target = ownerId === null ? root : elkNodeById.get(ownerId);
+    if (!target) continue;
+    target.edges = [...(target.edges ?? []), ...ownerEdges];
+  }
+}
+
 export function buildElkRootGraph(
   orderedTopLevelNodes: FlowNode[],
   childrenByParent: Map<string, FlowNode[]>,
@@ -209,7 +281,7 @@ export function buildElkRootGraph(
   nodeMinWidth: number,
   nodeMinHeight: number
 ): ElkNode {
-  return {
+  const root: ElkNode = {
     id: 'root',
     layoutOptions,
     children: orderedTopLevelNodes.map((node) =>
@@ -222,10 +294,9 @@ export function buildElkRootGraph(
         layoutOptions['elk.direction'] ?? 'DOWN'
       )
     ),
-    edges: sortedEdges.map((edge) => ({
-      id: edge.id,
-      sources: [edge.source],
-      targets: [edge.target],
-    })) as ElkExtendedEdge[],
+    edges: [],
   };
+  const parentById = buildParentIdMap(orderedTopLevelNodes, childrenByParent);
+  attachEdgesAtLca(root, sortedEdges, parentById);
+  return root;
 }

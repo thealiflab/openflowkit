@@ -297,6 +297,14 @@ export async function applyCodeChanges({
           : canvasImport.nodes,
         canvasImport.edges
       );
+      if (mode === 'mermaid') {
+        const { parseMermaidDirectives } = await import('@/services/mermaid/parseMermaidDirectives');
+        const { useFlowStore } = await import('@/store');
+        const directives = parseMermaidDirectives(code);
+        if (directives.flowchartCurve) {
+          useFlowStore.getState().setGlobalEdgeOptions({ curve: directives.flowchartCurve });
+        }
+      }
       setError(null);
       setDiagnostics([]);
       if (mode === 'mermaid' && 'diagramType' in res && res.diagramType) {

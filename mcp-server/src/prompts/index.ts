@@ -12,28 +12,23 @@ export function registerPrompts(server: McpServer): void {
     {
       title: 'Create a flowchart from a description',
       description:
-        'Guides the assistant to call generate_diagram_from_prompt with a flowchart-shaped DSL.',
+        'Guides the assistant to write OpenFlow DSL itself, validate it, and create a viewer URL.',
       argsSchema: {
         description: z
           .string()
           .describe('What the flowchart should represent (e.g. "checkout flow with promo code branch").'),
-        provider: z
-          .string()
-          .optional()
-          .describe('Which AI provider to use (defaults to the model orchestrating you).'),
       },
     },
-    ({ description, provider }) => ({
+    ({ description }) => ({
       messages: [
         {
           role: 'user' as const,
           content: {
             type: 'text' as const,
             text:
-              `Use the OpenFlowKit MCP tool \`generate_diagram_from_prompt\` to create a flowchart.\n\n` +
+              `Read \`openflowkit://docs/dsl-cheatsheet\`, then write OpenFlow DSL yourself for this flowchart.\n\n` +
               `Description:\n${description}\n\n` +
-              `Provider preference: ${provider ?? '(your choice)'}.\n\n` +
-              `After generation, return the DSL together with a short summary of the flow.`,
+              `Call \`validate_openflow_dsl\` on your DSL. Fix any errors. Then call \`create_viewer_url\` and return the final DSL, lint status, and viewer URL.`,
           },
         },
       ],
@@ -44,7 +39,7 @@ export function registerPrompts(server: McpServer): void {
     'convert_mermaid_to_openflow',
     {
       title: 'Convert a Mermaid diagram to OpenFlow DSL',
-      description: 'Guides the assistant to call mermaid_to_openflow_dsl on the provided Mermaid source.',
+      description: 'Guides the assistant to convert Mermaid to OpenFlow DSL itself and validate it.',
       argsSchema: {
         mermaidSource: z.string().describe('The Mermaid diagram to convert.'),
       },
@@ -56,9 +51,9 @@ export function registerPrompts(server: McpServer): void {
           content: {
             type: 'text' as const,
             text:
-              `Use the OpenFlowKit MCP tool \`mermaid_to_openflow_dsl\` to convert this Mermaid source into OpenFlow DSL.\n\n` +
+              `Read \`openflowkit://docs/dsl-cheatsheet\`, then convert this Mermaid source into OpenFlow DSL yourself.\n\n` +
               `Mermaid source:\n\`\`\`mermaid\n${mermaidSource}\n\`\`\`\n\n` +
-              `Return the resulting DSL plus the lint report.`,
+              `Preserve direction, node labels, edge labels, and edge emphasis where possible. Call \`validate_openflow_dsl\`, fix any errors, then call \`create_viewer_url\`. Return the final DSL, lint status, and viewer URL.`,
           },
         },
       ],
@@ -69,7 +64,7 @@ export function registerPrompts(server: McpServer): void {
     'architecture_from_codebase',
     {
       title: 'Draft an architecture diagram from a local codebase',
-      description: 'Guides the assistant to call codebase_to_diagram on a local project path.',
+      description: 'Guides the assistant to scan a local project, write OpenFlow DSL itself, and validate it.',
       argsSchema: {
         rootPath: z.string().describe('Absolute path to the project root.'),
       },
@@ -81,9 +76,9 @@ export function registerPrompts(server: McpServer): void {
           content: {
             type: 'text' as const,
             text:
-              `Call the OpenFlowKit MCP tool \`codebase_to_diagram\` on rootPath=\`${rootPath}\`.\n\n` +
-              `If the scan returns interesting services, follow up with \`edit_diagram\` to refine layout or labels.\n\n` +
-              `Finally, summarise the architecture in plain English for the user.`,
+              `Call \`analyze_codebase\` on rootPath=\`${rootPath}\`, then read \`openflowkit://docs/dsl-cheatsheet\`.\n\n` +
+              `Write an OpenFlow DSL architecture diagram yourself from the scan. Use \`find_icon\` before assigning architecture icon slugs. Call \`validate_openflow_dsl\`, fix any errors, then call \`create_viewer_url\`.\n\n` +
+              `Return the final DSL, lint status, viewer URL, and a short architecture summary.`,
           },
         },
       ],

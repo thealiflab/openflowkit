@@ -4,6 +4,7 @@ import { useFlowStore } from '../../store';
 import { Switch } from '../ui/Switch';
 import { Grid, Magnet, Network, Zap } from 'lucide-react';
 import type { GlobalEdgeOptions } from '@/lib/types';
+import type { EdgeCurve } from '@/components/custom-edge/edgeCurve';
 import { useViewSettings, useVisualSettingsActions } from '@/store/viewHooks';
 
 export function CanvasSettings(): React.ReactElement {
@@ -67,27 +68,47 @@ export function CanvasSettings(): React.ReactElement {
               {t('commandBar.visuals.edgeStyle')}
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { type: 'default', label: t('commandBar.visuals.bezier') },
-                { type: 'straight', label: t('commandBar.visuals.straight') },
-                { type: 'smoothstep', label: t('commandBar.visuals.smoothStep') },
-                { type: 'step', label: t('commandBar.visuals.step') },
-              ].map((style) => (
-                <button
-                  key={style.type}
-                  onClick={() =>
-                    setGlobalEdgeOptions({ type: style.type as GlobalEdgeOptions['type'] })
-                  }
-                  className={`h-9 rounded-[var(--radius-sm)] border text-xs font-semibold transition-colors ${
-                    globalEdgeOptions.type === style.type ||
-                    (style.type === 'default' && globalEdgeOptions.type === 'bezier')
-                      ? 'border-[var(--brand-primary)] bg-[var(--brand-primary-50)] text-[var(--brand-primary-700)]'
-                      : 'border-[var(--color-brand-border)] text-[var(--brand-text)] hover:border-[var(--brand-primary)]'
-                  }`}
-                >
-                  {style.label}
-                </button>
-              ))}
+              {([
+                {
+                  key: 'curved',
+                  type: 'bezier' as GlobalEdgeOptions['type'],
+                  curve: 'basis' as EdgeCurve,
+                  label: t('settingsModal.canvas.edgeStyleCurved', 'Curved'),
+                },
+                {
+                  key: 'rounded',
+                  type: 'smoothstep' as GlobalEdgeOptions['type'],
+                  curve: 'smoothstep' as EdgeCurve,
+                  label: t('settingsModal.canvas.edgeStyleRounded', 'Rounded'),
+                },
+                {
+                  key: 'sharp',
+                  type: 'step' as GlobalEdgeOptions['type'],
+                  curve: 'step' as EdgeCurve,
+                  label: t('settingsModal.canvas.edgeStyleSharp', 'Sharp'),
+                },
+                {
+                  key: 'straight',
+                  type: 'straight' as GlobalEdgeOptions['type'],
+                  curve: 'linear' as EdgeCurve,
+                  label: t('settingsModal.canvas.edgeStyleStraight', 'Straight'),
+                },
+              ]).map((style) => {
+                const active = globalEdgeOptions.curve === style.curve;
+                return (
+                  <button
+                    key={style.key}
+                    onClick={() => setGlobalEdgeOptions({ type: style.type, curve: style.curve })}
+                    className={`h-9 rounded-[var(--radius-sm)] border text-xs font-semibold transition-colors ${
+                      active
+                        ? 'border-[var(--brand-primary)] bg-[var(--brand-primary-50)] text-[var(--brand-primary-700)]'
+                        : 'border-[var(--color-brand-border)] text-[var(--brand-text)] hover:border-[var(--brand-primary)]'
+                    }`}
+                  >
+                    {style.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

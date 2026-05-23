@@ -65,8 +65,8 @@ export function IconAssetNodeBody({
       handleStyleExtras={ICON_HANDLE_STYLE_EXTRAS}
     >
       <div
-        className="inline-flex min-w-[96px] max-w-[128px] flex-col items-center justify-start gap-2.5 bg-transparent px-2 py-1"
-        style={{ width: toCssSize(explicitWidth) ?? `${Math.max(minWidth, 116)}px` }}
+        className="flex h-full w-full flex-col items-center justify-center gap-2.5 bg-transparent px-2 py-1"
+        style={{ width: toCssSize(explicitWidth) ?? '100%' }}
         {...getTransformDiagnosticsAttrs({
           nodeFamily: 'custom',
           selected,

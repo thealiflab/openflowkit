@@ -36,6 +36,10 @@ export interface EdgePathParams {
 export type EdgeVariant = 'bezier' | 'smoothstep' | 'step' | 'straight';
 export type LoopDirection = 'right' | 'top' | 'left' | 'bottom';
 
+// Re-export curve taxonomy so consumers depending on this types module can
+// reach it without a new import path.
+export type { EdgeCurve } from './edgeCurve';
+
 export interface EdgePathOptions {
   forceOrthogonal?: boolean;
   mermaidPreservedEndpoints?: boolean;
@@ -51,6 +55,8 @@ export interface EdgePathOptions {
     x: number;
     y: number;
   };
+  /** Overrides the visual curve interpolation. Falls back to `variant` mapping when unset. */
+  curve?: import('./edgeCurve').EdgeCurve;
 }
 
 export interface SelfLoopResult {

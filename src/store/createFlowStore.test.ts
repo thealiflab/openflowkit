@@ -47,7 +47,8 @@ describe('createFlowStore', () => {
         expect(state.designSystems[0]?.id).toBe('default');
         expect(state.activeDesignSystemId).toBe('default');
         expect(state.viewSettings.showGrid).toBe(true);
-        expect(state.globalEdgeOptions.type).toBe('smoothstep');
+        expect(state.globalEdgeOptions.type).toBe('bezier');
+        expect(state.globalEdgeOptions.curve).toBe('basis');
         expect(typeof state.setActiveDesignSystem).toBe('function');
         expect(typeof state.setViewSettings).toBe('function');
         expect(typeof state.updateLastSaveTime).toBe('function');

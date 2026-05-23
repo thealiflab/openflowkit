@@ -124,7 +124,7 @@ export const PROVIDERS: ProviderMeta[] = [
         name: 'OpenRouter',
         icon: '↔',
         color: '#111827',
-        logoPath: '/logos/custom.svg',
+        logoPath: '/logos/openrouter.svg',
         keyPlaceholder: 'sk-or-v1-...',
         keyLink: 'https://openrouter.ai/settings/keys',
         consoleName: 'OpenRouter Dashboard',
@@ -135,7 +135,7 @@ export const PROVIDERS: ProviderMeta[] = [
         name: 'Ollama (local)',
         icon: '⌘',
         color: '#0f172a',
-        logoPath: '/logos/custom.svg',
+        logoPath: '/logos/ollama.svg',
         // Ollama ignores the Authorization header; users can leave the key blank
         // and we send a placeholder. This preserves the rest of the OpenAI-compatible
         // request pipeline without special-casing it.

@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { AI_PROVIDERS, defaultBaseUrlFor, defaultModelFor } from '../lib/aiClient.js';
 import { findStarterTemplate, STARTER_TEMPLATES } from '../lib/starterTemplates.js';
+import { getAllIcons, getIconProviders, getIconsByProvider } from '../lib/iconCatalog.js';
 
 const DSL_CHEATSHEET = `# OpenFlow DSL Cheatsheet
 
@@ -26,6 +26,13 @@ api  --> db                 # secondary
 api  ..|error| n            # async / dotted
 branch ->|Yes| step1
 branch ->|No|  e1
+
+# Architecture icons
+# Use the [architecture] node type with archProvider + archResourceType attributes
+# to render a real provider icon (AWS, Azure, GCP, CNCF, or developer brand logos).
+# Always call the find_icon tool to discover the correct slug; do not guess.
+# Providers: aws, azure, gcp, cncf, developer
+# Catalog resource: openflowkit://icons (full) or openflowkit://icons/{provider} (per pack)
 `;
 
 export function registerResources(server: McpServer): void {
@@ -44,36 +51,6 @@ export function registerResources(server: McpServer): void {
           uri: uri.href,
           mimeType: 'text/markdown',
           text: DSL_CHEATSHEET,
-        },
-      ],
-    })
-  );
-
-  // Provider catalog as a discoverable resource.
-  server.registerResource(
-    'providers',
-    'openflowkit://providers',
-    {
-      title: 'Supported AI providers',
-      description: 'JSON list of supported AI providers with default models and env-var names.',
-      mimeType: 'application/json',
-    },
-    async (uri) => ({
-      contents: [
-        {
-          uri: uri.href,
-          mimeType: 'application/json',
-          text: JSON.stringify(
-            AI_PROVIDERS.map((provider) => ({
-              provider,
-              defaultModel: defaultModelFor(provider),
-              defaultBaseUrl: defaultBaseUrlFor(provider) ?? null,
-              envVar: `${provider.toUpperCase()}_API_KEY`,
-              localFirst: provider === 'ollama',
-            })),
-            null,
-            2
-          ),
         },
       ],
     })
@@ -106,6 +83,71 @@ export function registerResources(server: McpServer): void {
         },
       ],
     })
+  );
+
+  // Full icon catalog — agents can read it once and remember slugs, or prefer the
+  // find_icon tool for targeted queries.
+  server.registerResource(
+    'icons-catalog',
+    'openflowkit://icons',
+    {
+      title: 'Provider icon catalog',
+      description:
+        'Full JSON list of every provider icon available for [architecture] nodes ' +
+        '(AWS, Azure, GCP, CNCF, developer brand logos). Each entry has provider, slug, label, category.',
+      mimeType: 'application/json',
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: 'application/json',
+          text: JSON.stringify(await getAllIcons(), null, 2),
+        },
+      ],
+    })
+  );
+
+  server.registerResource(
+    'icons-by-provider',
+    new ResourceTemplate('openflowkit://icons/{provider}', {
+      list: async () => {
+        const providers = await getIconProviders();
+        return {
+          resources: providers.map((provider) => ({
+            uri: `openflowkit://icons/${provider}`,
+            name: `icons-${provider}`,
+            title: `${provider} icons`,
+            description: `Icon catalog for the ${provider} provider pack.`,
+            mimeType: 'application/json',
+          })),
+        };
+      },
+      complete: {
+        provider: async (value) => {
+          const providers = await getIconProviders();
+          return providers.filter((p) => p.startsWith(value.toLowerCase()));
+        },
+      },
+    }),
+    {
+      title: 'Provider icon catalog (per pack)',
+      description: 'JSON list of icons within a single provider pack.',
+      mimeType: 'application/json',
+    },
+    async (uri, variables) => {
+      const provider = String(variables.provider ?? '').toLowerCase();
+      const icons = await getIconsByProvider(provider);
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            mimeType: 'application/json',
+            text: JSON.stringify(icons, null, 2),
+          },
+        ],
+      };
+    }
   );
 
   server.registerResource(

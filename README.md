@@ -9,9 +9,9 @@
 
 <h1>OpenFlowKit</h1>
 
-<h3>The open-source diagramming studio builders actually want to use.</h3>
+<h3>The open-source diagramming studio for builders.</h3>
 
-<p>Create flows from templates, code, structured imports, or AI. Refine them visually, keep them local-first, and export — including as <b>Cinematic MP4 walkthroughs</b> and via the first <b>MCP server</b> for any OSS diagramming tool.</p>
+<p>Create flows from templates, code, structured imports, or AI. Refine them visually, keep them local-first, and export as <b>Cinematic MP4 walkthroughs</b> and via the first <b>MCP server</b> for any OSS diagramming tool.</p>
 
 <br/>
 
@@ -272,36 +272,27 @@ On modern browsers (Chrome / Edge / Safari 16.4+ / Firefox 130+) OpenFlowKit enc
 
 ## 🪄 MCP Server — drive OpenFlowKit from Claude Desktop, Cursor, Windsurf
 
-The **first Model Context Protocol server for any OSS diagramming tool.** Point any MCP client at the [`@openflowkit/mcp-server`](mcp-server/) package and your AI assistant gains 12 tools, 4 resources, and 3 ready-made prompts for generating, editing, validating, converting, and analysing diagrams.
+The **first Model Context Protocol server for any OSS diagramming tool.** Point any MCP client at the [`@openflowkit/mcp-server`](mcp-server/) package and your AI assistant gains provider-free diagramming tools. The client already has an LLM, so OpenFlowKit MCP supplies local validation, codebase analysis, templates, icon lookup, and viewer links instead of asking for another provider key.
 
 ```json
 {
   "mcpServers": {
     "openflowkit": {
       "command": "npx",
-      "args": ["-y", "@openflowkit/mcp-server"],
-      "env": { "ANTHROPIC_API_KEY": "sk-ant-..." }
+      "args": ["-y", "@openflowkit/mcp-server"]
     }
   }
 }
 ```
 
-Then ask Claude: *"Create a checkout flow with a promo-code branch and a Stripe webhook step."* The DSL comes back in seconds — and stays editable in OpenFlowKit.
+Then ask Claude: *"Read the OpenFlowKit DSL cheatsheet, create a checkout flow with a promo-code branch and a Stripe webhook step, validate it, and create a viewer URL."* The DSL comes back in seconds and stays editable in OpenFlowKit.
 
-- **12 tools** — generate / edit / validate DSL, Mermaid↔OpenFlow conversion, codebase analysis, codebase→diagram, starter templates, provider discovery
-- **Local-first by default** — 7 of 12 tools require no API key at all
-- **10 BYOK providers** — including local Ollama, no key required
+- **8 provider-free tools** — validate DSL, create viewer URLs, analyze codebases, find icon slugs, fetch starter templates, and inspect capabilities
+- **5 resources** — DSL cheatsheet, template catalog, template bodies, full icon catalog, and per-provider icon catalogs
+- **3 prompts** — flowchart creation, Mermaid conversion, and codebase architecture, all using the client model
 - **Pure Node, zero infra cost** — runs on the user's machine, ships via npm
 
-Full setup, tool table, and provider matrix in [`mcp-server/README.md`](mcp-server/README.md).
-
----
-
-## 🧷 Anchored Layout — auto-layout that respects what you've already built
-
-Most diagramming tools reshuffle the whole graph every time you hit auto-layout. OpenFlowKit doesn't. Select any nodes, right-click → **Pin Position** (or press <kbd>P</kbd>) and ELK will arrange every other node around them, preserving the layout you've already curated.
-
-Powered by ELK's `INTERACTIVE` layered placement strategy. Layout runs **off the main thread in a Web Worker** (ELK was moved to `elk-worker.min.js` behind a fallback), so even large architecture diagrams keep the UI responsive while relayout happens.
+Full setup, tool table, and workflow details in [`mcp-server/README.md`](mcp-server/README.md).
 
 ---
 

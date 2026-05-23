@@ -1,5 +1,4 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { AI_PROVIDERS, defaultBaseUrlFor, defaultModelFor } from '../lib/aiClient.js';
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '../lib/version.js';
 
 const NODE_TYPE_CATALOG = [
@@ -23,35 +22,6 @@ const EDGE_STYLES = [
 ];
 
 export function registerDiscoveryTools(server: McpServer): void {
-  server.registerTool(
-    'list_supported_ai_providers',
-    {
-      title: 'List supported AI providers',
-      description:
-        'List every AI provider supported by the diagram generation, edit, and ' +
-        'conversion tools. Returns provider id, default model, default base URL ' +
-        '(when applicable), and the env var the server reads for BYOK.',
-    },
-    async () => ({
-      content: [
-        {
-          type: 'text' as const,
-          text: JSON.stringify(
-            AI_PROVIDERS.map((provider) => ({
-              provider,
-              defaultModel: defaultModelFor(provider),
-              defaultBaseUrl: defaultBaseUrlFor(provider) ?? null,
-              envVar: `${provider.toUpperCase()}_API_KEY`,
-              localFirst: provider === 'ollama',
-            })),
-            null,
-            2
-          ),
-        },
-      ],
-    })
-  );
-
   server.registerTool(
     'list_diagram_node_types',
     {
@@ -86,25 +56,23 @@ export function registerDiscoveryTools(server: McpServer): void {
             {
               name: MCP_SERVER_NAME,
               version: MCP_SERVER_VERSION,
-              supportedProviders: AI_PROVIDERS,
+              providerFree: true,
               tools: [
-                'generate_diagram_from_prompt',
-                'edit_diagram',
                 'validate_openflow_dsl',
-                'mermaid_to_openflow_dsl',
-                'openflow_dsl_to_mermaid',
                 'analyze_codebase',
-                'codebase_to_diagram',
                 'list_starter_templates',
                 'get_starter_template',
-                'list_supported_ai_providers',
                 'list_diagram_node_types',
+                'find_icon',
+                'create_viewer_url',
                 'server_info',
               ],
               resources: [
                 'openflowkit://docs/dsl-cheatsheet',
+                'openflowkit://templates',
                 'openflowkit://templates/{name}',
-                'openflowkit://providers',
+                'openflowkit://icons',
+                'openflowkit://icons/{provider}',
               ],
               prompts: [
                 'flowchart_from_description',

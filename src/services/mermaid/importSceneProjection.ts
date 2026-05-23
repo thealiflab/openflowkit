@@ -9,9 +9,11 @@ import {
   attachMermaidImportedNodeMetadata,
 } from './importProvenance';
 
-// Width for imported leaf nodes: wide enough to be readable, narrow enough to
-// encourage wrapping so nodes grow taller rather than wider.
-const IMPORT_LEAF_MAX_WIDTH = 200;
+// Width for imported leaf nodes. Mermaid's renderer does not wrap labels, so
+// the upper bound is set generously to keep typical flowchart labels on a
+// single line (matching Mermaid's visual output); wrapping still kicks in for
+// very long labels so individual nodes don't stretch the layout.
+const IMPORT_LEAF_MAX_WIDTH = 320;
 const IMPORT_LEAF_MIN_WIDTH = 120;
 
 export interface MermaidImportSceneNode {
@@ -242,20 +244,25 @@ function createLeafNode(sceneNode: MermaidImportSceneNode): FlowNode {
   });
 
   const nextNode = applyNodeParent(baseNode, sceneNode.parentId);
-  // Set width from text estimation so labels wrap vertically rather than expanding
-  // the node horizontally. Height is intentionally omitted — React Flow measures
-  // it from the rendered content, giving each node the correct height for its
-  // number of wrapped lines. Mermaid's SVG rect sizes are NOT used because
-  // Mermaid (htmlLabels:false) emits a uniform default size for every node.
+  // Width comes from text estimation so labels wrap vertically rather than
+  // expanding the node horizontally. Height is intentionally omitted — React
+  // Flow measures it from the rendered content, giving each node the correct
+  // height for its number of wrapped lines. When Mermaid's renderer measured
+  // a wider rect than our estimate (e.g. a long single-word label), take the
+  // larger value so the node visually matches Mermaid.
   const { width: estimatedWidth } = estimateWrappedTextBox(sceneNode.label, {
     minWidth: IMPORT_LEAF_MIN_WIDTH,
     maxWidth: IMPORT_LEAF_MAX_WIDTH,
   });
+  const mermaidWidth =
+    typeof sceneNode.width === 'number' && sceneNode.width > estimatedWidth
+      ? Math.min(sceneNode.width, IMPORT_LEAF_MAX_WIDTH)
+      : estimatedWidth;
   return attachMermaidImportedNodeMetadata({
     ...nextNode,
     position: { ...sceneNode.position },
     data: buildMermaidImportedLeafData(sceneNode, nextNode.data, mappedShape),
-    style: { ...nextNode.style, width: estimatedWidth },
+    style: { ...nextNode.style, width: mermaidWidth },
   }, {
     role: 'leaf',
     source: 'official-flowchart',

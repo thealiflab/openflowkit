@@ -305,7 +305,8 @@
     "privacy": "隐私",
     "themeLight": "浅色",
     "themeDark": "深色",
-    "themeSystem": "跟随系统"
+    "themeSystem": "跟随系统",
+    "mcp": "MCP"
   },
   "shortcuts": {
     "title": "键盘快捷键",
@@ -860,7 +861,11 @@
       "mermaidImportMode": "Mermaid Import Mode",
       "mermaidImportModeRenderer": "Fidelity-first",
       "mermaidImportModeEditable": "Editable-first",
-      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas."
+      "mermaidImportModeDesc": "Controls how Mermaid diagrams are imported to the canvas.",
+      "edgeStyleCurved": "曲线",
+      "edgeStyleRounded": "圆角",
+      "edgeStyleSharp": "尖角",
+      "edgeStyleStraight": "直线"
     },
     "ai": {
       "provider": "提供商",
@@ -1444,5 +1449,38 @@
   "mindmap": {},
   "aiModel": {
     "buttons": {}
+  },
+  "mcpSettings": {
+    "title": "连接 AI 工具（MCP）",
+    "intro": "将 OpenFlowKit MCP 服务器添加到 Claude Desktop、Cursor、Windsurf 或任意 MCP 客户端。你的助手将获得本地运行的图表工具，无需 API 密钥，数据不会离开你的机器。",
+    "installHeading": "安装服务器",
+    "installNote": "需要 Node 18+。无需全局安装，npx 按需拉取。",
+    "configHeading": "添加到 AI 助手",
+    "configPathLabel": "添加到",
+    "configRestartNote": "保存后请重启客户端。",
+    "copyConfig": "复制 MCP 配置",
+    "copyInstall": "复制安装命令",
+    "keysNote": "无需 API 密钥。你的 AI 客户端会用自己的模型驱动这些工具。",
+    "toolsHeading": "助手将使用的工具",
+    "docsLink": "完整 MCP 文档",
+    "copy": "复制",
+    "copied": "已复制",
+    "eyebrow": "Model Context Protocol",
+    "statTools": "工具",
+    "statClients": "客户端",
+    "statTransport": "stdio",
+    "statTransportLabel": "传输",
+    "stepsLabel": "设置步骤",
+    "clientPicker": "AI 助手",
+    "toolsIntro": "这些是 AI 助手获得的能力，会根据你的请求自动选择。",
+    "footerNote": "需要调试连接或构建自定义客户端？",
+    "tryItHeading": "用提示语试一试",
+    "tryItIntro": "将以下内容粘贴到你的 AI 助手中。安装提示让代理型客户端（Cursor、Claude Code、Windsurf）替你写入配置；测试提示用于验证连接。",
+    "installPromptLabel": "安装提示语",
+    "installPromptHint": "用于 Cursor / Claude Code / Windsurf 代理",
+    "testPromptLabel": "测试提示语",
+    "testPromptHint": "粘贴到任何已连接的客户端",
+    "copyInstallPrompt": "复制安装提示语",
+    "copyTestPrompt": "复制测试提示语"
   }
 }

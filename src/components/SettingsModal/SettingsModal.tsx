@@ -1,21 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Keyboard, PenSquare, WandSparkles } from 'lucide-react';
+import { X, Keyboard, PenSquare, Plug, WandSparkles } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { AISettings } from './AISettings';
 import { CanvasSettings } from './CanvasSettings';
+import { MCPSettings } from './MCPSettings';
 import { ShortcutsSettings } from './ShortcutsSettings';
 import { SidebarItem } from '../ui/SidebarItem';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialTab?: 'canvas' | 'shortcuts' | 'ai';
+  initialTab?: 'canvas' | 'shortcuts' | 'ai' | 'mcp';
 }
 
 interface OpenSettingsModalContentProps {
   onClose: () => void;
-  initialTab: 'canvas' | 'shortcuts' | 'ai';
+  initialTab: 'canvas' | 'shortcuts' | 'ai' | 'mcp';
 }
 
 function OpenSettingsModalContent({
@@ -23,7 +24,7 @@ function OpenSettingsModalContent({
   initialTab,
 }: OpenSettingsModalContentProps): React.ReactElement {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'canvas' | 'shortcuts' | 'ai'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'canvas' | 'shortcuts' | 'ai' | 'mcp'>(initialTab);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -74,6 +75,15 @@ function OpenSettingsModalContent({
           </SidebarItem>
 
           <SidebarItem
+            icon={<Plug className="w-4 h-4" />}
+            isActive={activeTab === 'mcp'}
+            onClick={() => setActiveTab('mcp')}
+            className="whitespace-nowrap w-auto md:w-full px-4 md:px-3 py-2 md:py-2.5 flex-none"
+          >
+            {t('settings.mcp', 'MCP')}
+          </SidebarItem>
+
+          <SidebarItem
             icon={<Keyboard className="w-4 h-4" />}
             isActive={activeTab === 'shortcuts'}
             onClick={() => setActiveTab('shortcuts')}
@@ -94,6 +104,7 @@ function OpenSettingsModalContent({
                 {
                   canvas: t('settingsModal.canvasSettings', 'Canvas Settings'),
                   ai: t('settings.ai', 'AI'),
+                  mcp: t('mcpSettings.title', 'Connect AI tools (MCP)'),
                   shortcuts: t('settingsModal.keyboardShortcuts', 'Keyboard Shortcuts'),
                 }[activeTab]
               }
@@ -119,6 +130,7 @@ function OpenSettingsModalContent({
             <div className="p-6">
               {activeTab === 'canvas' && <CanvasSettings />}
               {activeTab === 'ai' && <AISettings />}
+              {activeTab === 'mcp' && <MCPSettings />}
               {activeTab === 'shortcuts' && <ShortcutsSettings />}
             </div>
           </div>
