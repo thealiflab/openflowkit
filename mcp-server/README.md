@@ -12,7 +12,7 @@
 
 ---
 
-OpenFlowKit MCP is **provider-free by design**. Your MCP client already has an LLM; the server does not rent or proxy another one.
+OpenFlowKit MCP is **local-first by design** — it runs on your machine over stdio with no API key and no cloud round-trip, and its tools return deterministic output. Your MCP client already has an LLM; this server just gives it diagram-specific tools.
 
 Instead, it gives the agent diagram-specific powers:
 

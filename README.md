@@ -271,7 +271,7 @@ On modern browsers (Chrome / Edge / Safari 16.4+ / Firefox 130+) OpenFlowKit enc
 
 ## 🪄 MCP Server — drive OpenFlowKit from Claude Desktop, Cursor, Windsurf
 
-Point any MCP client at the [`@vrun-design/openflowkit-mcp`](mcp-server/) package and your AI assistant gains provider-free diagramming tools. The client already has an LLM, so OpenFlowKit MCP supplies local validation, codebase analysis, templates, icon lookup, and viewer links instead of asking for another provider key.
+Point any MCP client at the [`@vrun-design/openflowkit-mcp`](mcp-server/) package and your AI assistant gains local-first diagramming tools — no API key, no cloud round-trip. Your client already has an LLM, so OpenFlowKit MCP supplies deterministic local validation, codebase analysis, templates, icon lookup, and viewer links.
 
 ```json
 {
@@ -286,7 +286,7 @@ Point any MCP client at the [`@vrun-design/openflowkit-mcp`](mcp-server/) packag
 
 Then ask Claude: *"Read the OpenFlowKit DSL cheatsheet, create a checkout flow with a promo-code branch and a Stripe webhook step, validate it, and create a viewer URL."* The DSL comes back in seconds and stays editable in OpenFlowKit.
 
-- **8 provider-free tools** — validate DSL, create viewer URLs, analyze codebases, find icon slugs, fetch starter templates, and inspect capabilities
+- **8 local-first tools** — validate DSL, create viewer URLs, analyze codebases, find icon slugs, fetch starter templates, and inspect capabilities (no API key, runs on your machine)
 - **5 resources** — DSL cheatsheet, template catalog, template bodies, full icon catalog, and per-provider icon catalogs
 - **3 prompts** — flowchart creation, Mermaid conversion, and codebase architecture, all using the client model
 - **Pure Node, zero infra cost** — runs on the user's machine, ships via npm

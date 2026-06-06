@@ -4,7 +4,7 @@ title: MCP Server
 description: Use the OpenFlowKit MCP server with Claude Desktop, Cursor, Windsurf, and other MCP clients.
 ---
 
-The OpenFlowKit MCP server gives AI clients diagramming skills without adding another AI provider. Claude Desktop, Cursor, Windsurf, and other MCP clients already have an LLM; OpenFlowKit supplies the local tools that make that model good at diagrams.
+The OpenFlowKit MCP server gives AI clients diagramming skills that run local-first — on your machine, no API key, no cloud round-trip, deterministic output. Claude Desktop, Cursor, Windsurf, and other MCP clients already have an LLM; OpenFlowKit supplies the local tools that make that model good at diagrams.
 
 The package is `@vrun-design/openflowkit-mcp`. It runs locally over the standard MCP stdio transport.
 
@@ -58,7 +58,7 @@ No API keys are required for MCP diagram generation.
 
 ## Tools
 
-The current server exposes 8 provider-free tools:
+The current server exposes 8 local-first tools (no API key, deterministic, run on your machine):
 
 | Tool | What it does |
 | --- | --- |
