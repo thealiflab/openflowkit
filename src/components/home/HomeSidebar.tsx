@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, Home, LayoutTemplate, Settings } from 'lucide-react';
+import { Book, Home, LayoutTemplate, Plug, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { OpenFlowLogo } from '../icons/OpenFlowLogo';
 import { SidebarFooter } from './SidebarFooter';
@@ -7,7 +7,7 @@ import { GithubCard } from './GithubCard';
 import { SidebarItem } from '../ui/SidebarItem';
 import { APP_NAME } from '@/lib/brand';
 
-type HomeSidebarTab = 'home' | 'templates' | 'settings';
+type HomeSidebarTab = 'home' | 'templates' | 'settings' | 'mcp';
 
 interface NavigationItem {
   icon: React.ReactNode;
@@ -40,6 +40,12 @@ export function HomeSidebar({
       label: t('nav.templates', 'Templates'),
       tab: 'templates',
       testId: 'sidebar-templates',
+    },
+    {
+      icon: <Plug className="w-4 h-4" />,
+      label: t('nav.mcp', 'MCP'),
+      tab: 'mcp',
+      testId: 'sidebar-mcp',
     },
     {
       icon: <Settings className="w-4 h-4" />,

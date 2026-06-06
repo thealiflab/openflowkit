@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import '@xyflow/react/dist/style.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { deflate, inflate } from 'pako';
-import { ReactFlow, Background, Controls, BackgroundVariant, ReactFlowProvider } from '@/lib/reactflowCompat';
-import { ExternalLink, AlertTriangle, Loader2 } from 'lucide-react';
+import {
+    Background,
+    BackgroundVariant,
+    Controls,
+    Handle,
+    MarkerType,
+    Position,
+    ReactFlow,
+    ReactFlowProvider,
+    type NodeProps,
+} from '@/lib/reactflowCompat';
+import { AlertTriangle, ExternalLink, Loader2 } from 'lucide-react';
+import { createFlowEditorOpenFlowDslRouteState } from '@/app/routeState';
 import { parseDslOrThrow } from '@/hooks/ai-generation/graphComposer';
 import { getElkLayout } from '@/services/elkLayout';
-import { flowCanvasNodeTypes, flowCanvasEdgeTypes } from './flow-canvas/flowCanvasTypes';
+import { decodeDslFromViewerParam } from '@/services/viewerUrlCodec';
+import { useWorkspaceDocumentActions } from '@/store/documentHooks';
 import { OpenFlowLogo } from './icons/OpenFlowLogo';
 import type { FlowNode, FlowEdge } from '@/lib/types';
-
-const PAKO_PREFIX = '~';
-
-function fromBase64Url(s: string): Uint8Array {
-    const pad = s.length % 4 === 0 ? '' : '='.repeat(4 - (s.length % 4));
-    const b64 = s.replace(/-/g, '+').replace(/_/g, '/') + pad;
-    const bin = atob(b64);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes;
-}
-
-function toBase64Url(bytes: Uint8Array): string {
-    let bin = '';
-    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
 
 type ParsedGraph = ReturnType<typeof parseDslOrThrow>;
 type ViewerSize = 'badge' | 'card' | 'full';
@@ -33,25 +28,28 @@ type LayoutState =
     | { status: 'error'; error: string }
     | { status: 'ready'; nodes: FlowNode[]; edges: FlowEdge[] };
 
-function decodeDsl(encoded: string): string {
-    if (encoded.startsWith(PAKO_PREFIX)) {
-        const bytes = fromBase64Url(encoded.slice(PAKO_PREFIX.length));
-        return new TextDecoder().decode(inflate(bytes));
-    }
-    return decodeURIComponent(atob(encoded));
-}
+type ParsedViewerGraph = ParsedGraph & { dsl: string };
 
-function parseGraphFromSearch(search: string): ParsedGraph | { parseError: string } {
+const VIEWER_NODE_WIDTH = 184;
+const VIEWER_NODE_HEIGHT = 76;
+const VIEWER_DECISION_SIZE = 150;
+
+const VIEWER_NODE_TYPES = {
+    viewer: ViewerNode,
+};
+
+function parseGraphFromSearch(search: string): ParsedViewerGraph | { parseError: string } {
     const encoded = new URLSearchParams(search).get('flow');
     if (!encoded) return { parseError: 'No diagram data in URL. Add ?flow=BASE64_DSL to the URL.' };
     let dsl: string;
     try {
-        dsl = decodeDsl(encoded);
-    } catch {
-        return { parseError: 'Could not decode diagram data. The URL may be malformed.' };
+        dsl = decodeDslFromViewerParam(encoded);
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown decode error';
+        return { parseError: `Could not decode diagram data. ${message}` };
     }
     try {
-        return parseDslOrThrow(dsl);
+        return { ...parseDslOrThrow(dsl), dsl };
     } catch (err) {
         return { parseError: `DSL parse error: ${err instanceof Error ? err.message : String(err)}` };
     }
@@ -61,6 +59,85 @@ function parseViewerSize(search: string): ViewerSize {
     const size = new URLSearchParams(search).get('size');
     if (size === 'badge' || size === 'card') return size;
     return 'full';
+}
+
+function getViewerNodeDimensions(node: FlowNode): { width: number; height: number } {
+    return node.data?.shape === 'diamond'
+        ? { width: VIEWER_DECISION_SIZE, height: VIEWER_DECISION_SIZE }
+        : { width: VIEWER_NODE_WIDTH, height: VIEWER_NODE_HEIGHT };
+}
+
+function prepareViewerNodes(nodes: FlowNode[]): FlowNode[] {
+    return nodes.map((node) => {
+        const dimensions = getViewerNodeDimensions(node);
+        return {
+            ...node,
+            type: 'viewer',
+            width: dimensions.width,
+            height: dimensions.height,
+            style: {
+                ...node.style,
+                width: dimensions.width,
+                height: dimensions.height,
+            },
+            data: {
+                ...node.data,
+                viewerShape: node.data?.shape,
+            },
+        };
+    });
+}
+
+function prepareViewerEdges(edges: FlowEdge[]): FlowEdge[] {
+    return edges.map((edge) => ({
+        ...edge,
+        type: 'smoothstep',
+        markerEnd: edge.markerEnd ?? { type: MarkerType.ArrowClosed },
+        style: {
+            stroke: '#64748b',
+            strokeWidth: 1.8,
+            ...edge.style,
+        },
+    }));
+}
+
+function ViewerNode({ data }: NodeProps): React.ReactElement {
+    const label = typeof data.label === 'string' ? data.label : 'Untitled';
+    const subLabel = typeof data.subLabel === 'string' ? data.subLabel : '';
+    const shape = data.viewerShape === 'diamond' ? 'diamond' : 'rounded';
+    const isDecision = shape === 'diamond';
+
+    return (
+        <div className="relative h-full w-full">
+            <Handle id="top" type="source" position={Position.Top} className="opacity-0" />
+            <Handle id="right" type="source" position={Position.Right} className="opacity-0" />
+            <Handle id="bottom" type="source" position={Position.Bottom} className="opacity-0" />
+            <Handle id="left" type="source" position={Position.Left} className="opacity-0" />
+            <Handle id="top" type="target" position={Position.Top} className="opacity-0" />
+            <Handle id="right" type="target" position={Position.Right} className="opacity-0" />
+            <Handle id="bottom" type="target" position={Position.Bottom} className="opacity-0" />
+            <Handle id="left" type="target" position={Position.Left} className="opacity-0" />
+            <div
+                className={[
+                    'flex h-full w-full items-center justify-center border bg-white px-4 text-center shadow-sm',
+                    isDecision
+                        ? 'rotate-45 border-amber-300'
+                        : 'rounded-lg border-slate-200',
+                ].join(' ')}
+            >
+                <div className={isDecision ? '-rotate-45 max-w-[92px]' : 'max-w-[148px]'}>
+                    <div className="truncate text-[13px] font-semibold leading-5 text-slate-900">
+                        {label}
+                    </div>
+                    {subLabel ? (
+                        <div className="mt-0.5 truncate text-[11px] leading-4 text-slate-500">
+                            {subLabel}
+                        </div>
+                    ) : null}
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function ViewerCanvas({
@@ -74,21 +151,22 @@ function ViewerCanvas({
 }): React.ReactElement {
     return (
         <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={flowCanvasNodeTypes}
-            edgeTypes={flowCanvasEdgeTypes}
+            nodes={prepareViewerNodes(nodes)}
+            edges={prepareViewerEdges(edges)}
+            nodeTypes={VIEWER_NODE_TYPES}
             nodesDraggable={false}
             nodesConnectable={false}
             elementsSelectable={false}
             panOnScroll
-            zoomOnScroll={false}
+            zoomOnScroll
             zoomOnPinch
+            minZoom={0.2}
+            maxZoom={1.6}
             fitView
-            fitViewOptions={{ padding: size === 'badge' ? 0.08 : size === 'card' ? 0.12 : 0.15 }}
-            className="bg-[var(--brand-background,#f8fafc)]"
+            fitViewOptions={{ padding: size === 'badge' ? 0.16 : size === 'card' ? 0.18 : 0.2 }}
+            className="bg-slate-50"
         >
-            <Background variant={BackgroundVariant.Dots} gap={24} size={size === 'badge' ? 1.3 : 1.9} color="color-mix(in srgb, var(--brand-secondary), transparent 80%)" />
+            <Background variant={BackgroundVariant.Dots} gap={22} size={size === 'badge' ? 1 : 1.4} color="#cbd5e1" />
             {size === 'full' ? <Controls showInteractive={false} /> : null}
         </ReactFlow>
     );
@@ -97,10 +175,11 @@ function ViewerCanvas({
 function DiagramViewerInner(): React.ReactElement {
     const location = useLocation();
     const navigate = useNavigate();
+    const { createDocument } = useWorkspaceDocumentActions();
     const viewerSize = parseViewerSize(location.search);
 
     // Parse synchronously once on mount via lazy initializer — no effect needed.
-    const [parsed] = useState<ParsedGraph | { parseError: string }>(() =>
+    const [parsed] = useState<ParsedViewerGraph | { parseError: string }>(() =>
         parseGraphFromSearch(location.search)
     );
 
@@ -113,7 +192,11 @@ function DiagramViewerInner(): React.ReactElement {
     // Run layout asynchronously — only when parse succeeded.
     useEffect(() => {
         if ('parseError' in parsed) return;
-        getElkLayout(parsed.nodes, parsed.edges)
+        getElkLayout(prepareViewerNodes(parsed.nodes), prepareViewerEdges(parsed.edges), {
+            source: 'import',
+            direction: 'LR',
+            spacing: 'normal',
+        })
             .then(({ nodes, edges }) => {
                 setLayoutState({ status: 'ready', nodes, edges });
             })
@@ -122,27 +205,41 @@ function DiagramViewerInner(): React.ReactElement {
             });
     }, [parsed]);
 
+    function handleOpenInEditor(): void {
+        if ('parseError' in parsed) {
+            return;
+        }
+
+        const documentId = createDocument();
+        navigate(`/flow/${documentId}`, {
+            state: createFlowEditorOpenFlowDslRouteState(parsed.dsl),
+        });
+    }
+
     return (
-        <div className="flex h-screen w-screen flex-col overflow-hidden bg-[var(--brand-background)]">
+        <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-50">
             {viewerSize !== 'badge' ? (
-            <div className={`flex shrink-0 items-center justify-between border-b border-[var(--color-brand-border)] bg-[var(--brand-surface)]/90 px-4 backdrop-blur ${viewerSize === 'card' ? 'h-9' : 'h-10'}`}>
-                <div className="flex items-center gap-2">
-                    <OpenFlowLogo className="h-5 w-5 text-[var(--brand-primary,#e95420)]" />
-                    <span className="text-xs font-semibold text-[var(--brand-secondary)]">{viewerSize === 'card' ? 'OpenFlowKit Viewer' : 'OpenFlowKit'}</span>
+                <div className={`flex shrink-0 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur ${viewerSize === 'card' ? 'h-10' : 'h-12'}`}>
+                    <div className="flex items-center gap-2">
+                        <OpenFlowLogo className="h-5 w-5 text-orange-600" />
+                        <span className="text-xs font-semibold text-slate-700">
+                            {viewerSize === 'card' ? 'OpenFlowKit Viewer' : 'OpenFlowKit'}
+                        </span>
+                    </div>
+                    <button
+                        onClick={handleOpenInEditor}
+                        disabled={'parseError' in parsed}
+                        className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-all hover:border-orange-300 hover:text-orange-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <ExternalLink className="h-3 w-3" />
+                        Open in Editor
+                    </button>
                 </div>
-                <button
-                    onClick={() => navigate('/home')}
-                    className="flex items-center gap-1.5 rounded-full border border-[var(--color-brand-border)] bg-[var(--brand-surface)] px-3 py-1 text-[11px] font-medium text-[var(--brand-secondary)] shadow-sm transition-all hover:border-[var(--brand-primary,#e95420)] hover:text-[var(--brand-primary,#e95420)] active:scale-95"
-                >
-                    <ExternalLink className="h-3 w-3" />
-                    Open in Editor
-                </button>
-            </div>
             ) : (
-            <div className="flex h-7 shrink-0 items-center justify-between border-b border-[var(--color-brand-border)] bg-[var(--brand-surface)]/90 px-3 text-[10px] font-semibold uppercase tracking-widest text-[var(--brand-secondary)]">
-                <span>OpenFlowKit</span>
-                <span>Badge Viewer</span>
-            </div>
+                <div className="flex h-7 shrink-0 items-center justify-between border-b border-slate-200 bg-white/95 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                    <span>OpenFlowKit</span>
+                    <span>Badge Viewer</span>
+                </div>
             )}
 
             <div className="relative min-h-0 flex-1">
@@ -174,10 +271,4 @@ export function DiagramViewer(): React.ReactElement {
             <DiagramViewerInner />
         </ReactFlowProvider>
     );
-}
-
-/** Encode a DSL string to a viewer URL param (deflate + base64url, `~`-prefixed). */
-export function encodeDslForViewer(dsl: string): string {
-    const compressed = deflate(new TextEncoder().encode(dsl), { level: 9 });
-    return PAKO_PREFIX + toBase64Url(compressed);
 }

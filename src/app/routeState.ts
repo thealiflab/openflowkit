@@ -3,6 +3,7 @@ export interface FlowEditorRouteState {
   openTemplates?: boolean;
   openStudioAI?: boolean;
   initialTemplateId?: string;
+  initialOpenFlowDsl?: string;
 }
 
 export function createFlowEditorImportRouteState(): FlowEditorRouteState {
@@ -15,6 +16,10 @@ export function createFlowEditorInitialTemplateRouteState(templateId: string): F
 
 export function createFlowEditorAIRouteState(): FlowEditorRouteState {
   return { openStudioAI: true };
+}
+
+export function createFlowEditorOpenFlowDslRouteState(dsl: string): FlowEditorRouteState {
+  return { initialOpenFlowDsl: dsl };
 }
 
 export function shouldOpenFlowEditorImportDialog(state: unknown): boolean {
@@ -36,5 +41,12 @@ export function getInitialFlowEditorTemplateId(state: unknown): string | null {
   if (!state || typeof state !== 'object') return null;
   return typeof (state as FlowEditorRouteState).initialTemplateId === 'string'
     ? (state as FlowEditorRouteState).initialTemplateId as string
+    : null;
+}
+
+export function getInitialFlowEditorOpenFlowDsl(state: unknown): string | null {
+  if (!state || typeof state !== 'object') return null;
+  return typeof (state as FlowEditorRouteState).initialOpenFlowDsl === 'string'
+    ? (state as FlowEditorRouteState).initialOpenFlowDsl as string
     : null;
 }
