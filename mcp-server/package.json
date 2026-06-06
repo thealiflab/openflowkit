@@ -1,6 +1,7 @@
 {
   "name": "@vrun-design/openflowkit-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "io.github.vrun-design/openflowkit-mcp",
   "description": "Local-first Model Context Protocol server for OpenFlowKit — deterministic diagramming tools (validate DSL, templates, icons, viewer links) for Claude Desktop, Cursor, Windsurf, and other MCP clients. No API key, no cloud round-trip.",
   "keywords": [
     "mcp",

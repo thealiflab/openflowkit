@@ -56,7 +56,7 @@ export function registerDiscoveryTools(server: McpServer): void {
             {
               name: MCP_SERVER_NAME,
               version: MCP_SERVER_VERSION,
-              providerFree: true,
+              localFirst: true,
               tools: [
                 'validate_openflow_dsl',
                 'analyze_codebase',
