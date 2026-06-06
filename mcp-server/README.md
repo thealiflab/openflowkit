@@ -4,7 +4,7 @@
 
 **Give Claude Desktop, Cursor, Windsurf, or any MCP client first-class diagramming tools.**
 
-[![npm](https://img.shields.io/npm/v/@openflowkit/mcp-server?style=flat-square&color=f97316)](https://www.npmjs.com/package/@openflowkit/mcp-server)
+[![npm](https://img.shields.io/npm/v/@vrun-design/openflowkit-mcp?style=flat-square&color=f97316)](https://www.npmjs.com/package/@vrun-design/openflowkit-mcp)
 [![MIT License](https://img.shields.io/badge/License-MIT-f97316.svg?style=flat-square)](https://github.com/Vrun-design/openflowkit/blob/main/LICENSE)
 [![Node 18+](https://img.shields.io/badge/Node-18%2B-339933.svg?style=flat-square)](https://nodejs.org/)
 
@@ -41,10 +41,10 @@ Claude: reads openflowkit://docs/dsl-cheatsheet
 
 ```bash
 # No install required; npx fetches the latest published version
-npx -y @openflowkit/mcp-server
+npx -y @vrun-design/openflowkit-mcp
 
 # Or install globally
-npm install -g @openflowkit/mcp-server
+npm install -g @vrun-design/openflowkit-mcp
 openflowkit-mcp
 ```
 
@@ -64,7 +64,7 @@ Edit your Claude Desktop config:
   "mcpServers": {
     "openflowkit": {
       "command": "npx",
-      "args": ["-y", "@openflowkit/mcp-server"]
+      "args": ["-y", "@vrun-design/openflowkit-mcp"]
     }
   }
 }
@@ -77,7 +77,7 @@ Restart Claude Desktop. You should see **openflowkit** in the tool picker.
 Point the client at the same command:
 
 - command: `npx`
-- args: `["-y", "@openflowkit/mcp-server"]`
+- args: `["-y", "@vrun-design/openflowkit-mcp"]`
 
 The server speaks the standard MCP stdio protocol. Client UIs differ, but the command shape is the same.
 

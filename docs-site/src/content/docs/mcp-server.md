@@ -6,20 +6,20 @@ description: Use the OpenFlowKit MCP server with Claude Desktop, Cursor, Windsur
 
 The OpenFlowKit MCP server gives AI clients diagramming skills without adding another AI provider. Claude Desktop, Cursor, Windsurf, and other MCP clients already have an LLM; OpenFlowKit supplies the local tools that make that model good at diagrams.
 
-The package is `@openflowkit/mcp-server`. It runs locally over the standard MCP stdio transport.
+The package is `@vrun-design/openflowkit-mcp`. It runs locally over the standard MCP stdio transport.
 
 ## Install and run
 
 Use it directly with `npx`:
 
 ```bash
-npx -y @openflowkit/mcp-server
+npx -y @vrun-design/openflowkit-mcp
 ```
 
 Or install it globally:
 
 ```bash
-npm install -g @openflowkit/mcp-server
+npm install -g @vrun-design/openflowkit-mcp
 openflowkit-mcp
 ```
 
@@ -34,7 +34,7 @@ Add the server to your Claude Desktop config:
   "mcpServers": {
     "openflowkit": {
       "command": "npx",
-      "args": ["-y", "@openflowkit/mcp-server"]
+      "args": ["-y", "@vrun-design/openflowkit-mcp"]
     }
   }
 }

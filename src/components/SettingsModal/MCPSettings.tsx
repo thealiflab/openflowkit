@@ -71,7 +71,7 @@ function buildConfig(): string {
       mcpServers: {
         openflowkit: {
           command: 'npx',
-          args: ['-y', '@openflowkit/mcp-server'],
+          args: ['-y', '@vrun-design/openflowkit-mcp'],
         },
       },
     },
@@ -176,7 +176,7 @@ function StepRail({
 export function MCPSettings(): React.ReactElement {
   const { t } = useTranslation();
   const [client, setClient] = useState<ClientId>('claude');
-  const installCmd = 'npx -y @openflowkit/mcp-server';
+  const installCmd = 'npx -y @vrun-design/openflowkit-mcp';
   const config = buildConfig();
   const activeClient = CLIENTS.find((c) => c.id === client) ?? CLIENTS[0];
 

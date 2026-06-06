@@ -271,14 +271,14 @@ On modern browsers (Chrome / Edge / Safari 16.4+ / Firefox 130+) OpenFlowKit enc
 
 ## 🪄 MCP Server — drive OpenFlowKit from Claude Desktop, Cursor, Windsurf
 
-Point any MCP client at the [`@openflowkit/mcp-server`](mcp-server/) package and your AI assistant gains provider-free diagramming tools. The client already has an LLM, so OpenFlowKit MCP supplies local validation, codebase analysis, templates, icon lookup, and viewer links instead of asking for another provider key.
+Point any MCP client at the [`@vrun-design/openflowkit-mcp`](mcp-server/) package and your AI assistant gains provider-free diagramming tools. The client already has an LLM, so OpenFlowKit MCP supplies local validation, codebase analysis, templates, icon lookup, and viewer links instead of asking for another provider key.
 
 ```json
 {
   "mcpServers": {
     "openflowkit": {
       "command": "npx",
-      "args": ["-y", "@openflowkit/mcp-server"]
+      "args": ["-y", "@vrun-design/openflowkit-mcp"]
     }
   }
 }
@@ -338,7 +338,7 @@ Plus: smart alignment guides, snap-to-grid, multi-select, pages, layers, section
 Recently shipped (latest milestone):
 
 - ✅ **WebCodecs H.264 MP4 export** — faster-than-realtime, hardware-accelerated, deterministic
-- ✅ **MCP server** — `@openflowkit/mcp-server` for Claude Desktop, Cursor, Windsurf, any MCP client
+- ✅ **MCP server** — `@vrun-design/openflowkit-mcp` for Claude Desktop, Cursor, Windsurf, any MCP client
 - ✅ **Anchored layout** — pin nodes so auto-layout arranges around them
 - ✅ **Ollama provider** — fully offline diagramming, no API key, no cost
 - ✅ **AI self-correction loop** — bad DSL → AI sees its own output + parser error → returns corrected DSL
@@ -408,7 +408,7 @@ No database. No secrets. No infrastructure. One folder, or one container.
 | State         | Zustand                                                   |
 | Storage       | IndexedDB — local-first, no backend                       |
 | Styling       | Tailwind CSS                                              |
-| Agent surface | `@openflowkit/mcp-server` — Model Context Protocol stdio  |
+| Agent surface | `@vrun-design/openflowkit-mcp` — Model Context Protocol stdio  |
 | Collaboration | WebRTC P2P (opt-in, off by default)                       |
 | i18n          | react-i18next — 7 languages                               |
 | Testing       | Vitest + Playwright                                       |
