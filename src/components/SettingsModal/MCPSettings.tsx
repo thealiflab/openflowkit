@@ -63,15 +63,13 @@ const TOOL_GROUPS: ToolGroup[] = [
   },
 ];
 
-const TOTAL_TOOLS = TOOL_GROUPS.reduce((sum, g) => sum + g.tools.length, 0);
-
 function buildConfig(): string {
   return JSON.stringify(
     {
       mcpServers: {
         openflowkit: {
           command: 'npx',
-          args: ['-y', '@openflowkit/mcp-server'],
+          args: ['-y', '@vrun-design/openflowkit-mcp'],
         },
       },
     },
@@ -173,43 +171,36 @@ function StepRail({
   );
 }
 
-export function MCPSettings(): React.ReactElement {
+interface MCPSettingsProps {
+  /** 'page' hides the intro header (the standalone page supplies its own); 'panel' is the in-Settings tab. */
+  variant?: 'page' | 'panel';
+}
+
+export function MCPSettings({ variant = 'panel' }: MCPSettingsProps = {}): React.ReactElement {
   const { t } = useTranslation();
   const [client, setClient] = useState<ClientId>('claude');
-  const installCmd = 'npx -y @openflowkit/mcp-server';
+  const installCmd = 'npx -y @vrun-design/openflowkit-mcp';
   const config = buildConfig();
   const activeClient = CLIENTS.find((c) => c.id === client) ?? CLIENTS[0];
 
   return (
     <div className="space-y-8">
-      <header className="rounded-xl border border-[var(--color-brand-border)] bg-[var(--brand-background)]/60 p-5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--brand-primary)]">
-          {t('mcpSettings.eyebrow', 'Model Context Protocol')}
-        </p>
-        <h3 className="mt-1 text-base font-semibold tracking-tight text-[var(--brand-text)]">
-          {t('mcpSettings.title', 'Connect AI tools (MCP)')}
-        </h3>
-        <p className="mt-2 max-w-prose text-[13px] leading-relaxed text-[var(--brand-secondary)]">
-          {t(
-            'mcpSettings.intro',
-            'Add the OpenFlowKit MCP server to Claude Desktop, Cursor, Windsurf, or any MCP client. Your assistant uses its own model to author diagrams, while OpenFlowKit supplies local validation, templates, icon lookup, codebase analysis, and viewer links.',
-          )}
-        </p>
-        <dl className="mt-5 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-[var(--color-brand-border)] bg-[var(--color-brand-border)] text-center">
-          {[
-            { value: TOTAL_TOOLS, label: t('mcpSettings.statTools', 'Tools') },
-            { value: CLIENTS.length, label: t('mcpSettings.statClients', 'Clients') },
-            { value: t('mcpSettings.statTransport', 'stdio'), label: t('mcpSettings.statTransportLabel', 'Transport') },
-          ].map((stat, i) => (
-            <div key={i} className="bg-[var(--brand-surface)] px-3 py-3">
-              <dt className="text-[10px] font-semibold uppercase tracking-wider text-[var(--brand-secondary)]">
-                {stat.label}
-              </dt>
-              <dd className="mt-0.5 text-sm font-semibold text-[var(--brand-text)]">{stat.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </header>
+      {variant === 'panel' ? (
+        <header className="rounded-xl border border-[var(--color-brand-border)] bg-[var(--brand-background)]/60 p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--brand-primary)]">
+            {t('mcpSettings.eyebrow', 'Model Context Protocol')}
+          </p>
+          <h3 className="mt-1 text-base font-semibold tracking-tight text-[var(--brand-text)]">
+            {t('mcpSettings.title', 'Connect AI tools (MCP)')}
+          </h3>
+          <p className="mt-2 max-w-prose text-[13px] leading-relaxed text-[var(--brand-secondary)]">
+            {t(
+              'mcpSettings.intro',
+              'Add the OpenFlowKit MCP server to Claude Desktop, Cursor, Windsurf, or any MCP client. Your assistant uses its own model to author diagrams, while OpenFlowKit supplies local validation, templates, icon lookup, codebase analysis, and viewer links.',
+            )}
+          </p>
+        </header>
+      ) : null}
 
       <ol className="list-none" aria-label={t('mcpSettings.stepsLabel', 'Setup steps')}>
         <StepRail index={1} title={t('mcpSettings.installHeading', 'Install the server')}>

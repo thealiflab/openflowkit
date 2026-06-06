@@ -3,12 +3,13 @@ import { useFlowStore } from '../store';
 import { useWorkspaceDocumentActions, useWorkspaceDocumentsState } from '@/store/documentHooks';
 import { HomeDashboard, type HomeFlowCard } from './home/HomeDashboard';
 import { HomeFlowDeleteDialog, HomeFlowRenameDialog } from './home/HomeFlowDialogs';
+import { HomeMCPView } from './home/HomeMCPView';
 import { HomeSettingsView } from './home/HomeSettingsView';
 import { HomeSidebar } from './home/HomeSidebar';
 import { HomeTemplatesView } from './home/HomeTemplatesView';
 import { shouldShowWelcomeModal } from './home/welcomeModalState';
 
-type HomePageTab = 'home' | 'templates' | 'settings';
+type HomePageTab = 'home' | 'templates' | 'settings' | 'mcp';
 type HomeSettingsTab = 'general' | 'canvas' | 'shortcuts' | 'ai' | 'mcp';
 
 const LazyWelcomeModal = lazy(async () => {
@@ -132,6 +133,8 @@ export const HomePage: React.FC<HomePageProps> = ({
         {activeTab === 'templates' && (
           <HomeTemplatesView onUseTemplate={onLaunchWithTemplate} />
         )}
+
+        {activeTab === 'mcp' && <HomeMCPView />}
 
         {activeTab === 'settings' && (
           <HomeSettingsView

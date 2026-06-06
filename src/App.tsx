@@ -54,6 +54,21 @@ function navigateHome(navigate: ReturnType<typeof useNavigate>): void {
   navigate('/home', { replace: true });
 }
 
+function normalizeLegacyViewerUrl(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const { pathname, search, hash } = window.location;
+  if (hash || !pathname.endsWith('/view') || !new URLSearchParams(search).has('flow')) {
+    return;
+  }
+
+  const basePathPrefix = pathname.slice(0, -'/view'.length);
+  const basePath = basePathPrefix ? `${basePathPrefix}/` : '/';
+  window.history.replaceState(null, '', `${basePath}#/view${search}`);
+}
+
 function FlowCanvasRoute(): React.JSX.Element {
   const { flowId } = useParams();
   const navigate = useNavigate();
@@ -159,6 +174,9 @@ function EditorRouteGate({ children }: { children: React.ReactNode }): React.JSX
 function App(): React.JSX.Element {
   const { setShortcutsHelpOpen } = useFlowStore();
   const isShortcutsHelpOpen = useShortcutHelpOpen();
+
+  normalizeLegacyViewerUrl();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in an input
@@ -205,6 +223,7 @@ function App(): React.JSX.Element {
           />
           <Route path="/home" element={<HomePageRoute />} />
           <Route path="/templates" element={<HomePageRoute />} />
+          <Route path="/mcp" element={<HomePageRoute />} />
           <Route path="/settings" element={<HomePageRoute />} />
           <Route
             path="/canvas"
@@ -237,23 +256,27 @@ function App(): React.JSX.Element {
   );
 }
 
-function getHomePageTab(pathname: string): 'home' | 'templates' | 'settings' {
+function getHomePageTab(pathname: string): 'home' | 'templates' | 'settings' | 'mcp' {
   switch (pathname) {
     case '/settings':
       return 'settings';
     case '/templates':
       return 'templates';
+    case '/mcp':
+      return 'mcp';
     default:
       return 'home';
   }
 }
 
-function getHomePagePath(tab: 'home' | 'templates' | 'settings'): string {
+function getHomePagePath(tab: 'home' | 'templates' | 'settings' | 'mcp'): string {
   switch (tab) {
     case 'settings':
       return '/settings';
     case 'templates':
       return '/templates';
+    case 'mcp':
+      return '/mcp';
     default:
       return '/home';
   }

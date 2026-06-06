@@ -95,7 +95,8 @@
     "loadJSON": "Charger JSON",
     "playbackMode": "Mode lecture",
     "privacyMessage": "Vos diagrammes restent avec vous et n’atteignent pas nos serveurs.",
-    "templates": "Modèles"
+    "templates": "Modèles",
+    "mcp": "MCP"
   },
   "menu": {
     "file": "Fichier",
@@ -1482,5 +1483,12 @@
     "testPromptHint": "Collez dans n’importe quel client connecté",
     "copyInstallPrompt": "Copier le prompt d’installation",
     "copyTestPrompt": "Copier le prompt de test"
+  },
+  "mcp": {
+    "pageTitle": "Connect AI tools",
+    "pageSubtitle": "Give any MCP client first-class diagramming tools. Local-first, no API key.",
+    "visualAlt": "Your AI client connects to the OpenFlowKit MCP server over stdio, which provides local diagramming tools.",
+    "visualClient": "Your AI client",
+    "visualCaption": "Local · stdio · no API key"
   }
 }

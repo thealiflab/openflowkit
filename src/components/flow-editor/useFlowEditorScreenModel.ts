@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getInitialFlowEditorOpenFlowDsl } from '@/app/routeState';
 import { useAIGeneration } from '@/hooks/useAIGeneration';
 import { parseInfraDslApplyInput } from './infraDslApply';
 import { useFlowExport } from '@/hooks/useFlowExport';
@@ -20,6 +21,8 @@ export function useFlowEditorScreenModel({ onGoHome }: UseFlowEditorScreenModelP
   const { t } = useTranslation();
   const { addToast } = useToast();
   const screenState = useFlowEditorScreenState();
+  const { location, navigate } = screenState;
+  const consumedInitialDslRef = useRef<string | null>(null);
   const { operations, callbacks } = useFlowEditorScreenBehavior({
     screenState,
     t,
@@ -63,6 +66,31 @@ export function useFlowEditorScreenModel({ onGoHome }: UseFlowEditorScreenModelP
     },
     [addToast, callbacks]
   );
+
+  useEffect(() => {
+    const initialDsl = getInitialFlowEditorOpenFlowDsl(location.state);
+    if (!initialDsl || consumedInitialDslRef.current === initialDsl) {
+      return;
+    }
+
+    consumedInitialDslRef.current = initialDsl;
+    handleApplyDsl(initialDsl);
+    navigate(
+      {
+        pathname: location.pathname,
+        search: location.search,
+        hash: location.hash,
+      },
+      { replace: true, state: null }
+    );
+  }, [
+    handleApplyDsl,
+    location.hash,
+    location.pathname,
+    location.search,
+    location.state,
+    navigate,
+  ]);
 
   const {
     handleGenerateEntityFields,

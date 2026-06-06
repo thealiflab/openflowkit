@@ -7,11 +7,12 @@
  * when the prefix is absent, so old links keep working.
  *
  * Override the base origin with OPENFLOWKIT_APP_URL (e.g. http://localhost:5173
- * for local dev). Defaults to https://openflowkit.com.
+ * for local dev). Defaults to https://app.openflowkit.com. The app currently
+ * uses hash routing, so the viewer path must live after `#/`.
  */
 import { deflate } from 'pako';
 
-const DEFAULT_APP_URL = 'https://openflowkit.com';
+const DEFAULT_APP_URL = 'https://app.openflowkit.com';
 const PAKO_PREFIX = '~';
 
 function getAppBaseUrl(): string {
@@ -37,5 +38,5 @@ export function encodeDslForViewer(dsl: string): string {
 
 /** URL that opens the DSL in OpenFlowKit's read-only viewer. */
 export function buildViewerUrl(dsl: string): string {
-  return `${getAppBaseUrl()}/view?flow=${encodeDslForViewer(dsl)}`;
+  return `${getAppBaseUrl()}/#/view?flow=${encodeDslForViewer(dsl)}`;
 }

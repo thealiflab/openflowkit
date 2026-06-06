@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Vrun-design/openflowkit-mcp",
+  "description": "Local-first OpenFlowKit diagramming tools for Claude, Cursor, Windsurf & other MCP clients.",
+  "repository": {
+    "url": "https://github.com/Vrun-design/openflowkit",
+    "source": "github"
+  },
+  "version": "0.1.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@vrun-design/openflowkit-mcp",
+      "version": "0.1.2",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

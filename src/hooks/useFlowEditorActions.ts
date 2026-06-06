@@ -17,7 +17,7 @@ import {
     exportPlantUMLToClipboard,
 } from './flow-editor-actions/exportHandlers';
 import { toOpenFlowDSL } from '@/services/openFlowDSLExporter';
-import { encodeDslForViewer } from '@/components/DiagramViewer';
+import { encodeDslForViewer } from '@/services/viewerUrlCodec';
 import {
     buildTemplateInsertionResult,
     getAutoLayoutResult,
@@ -184,7 +184,7 @@ export function useFlowEditorActions({
         }
         const dsl = toOpenFlowDSL(nodes, edges, { mode: exportSerializationMode });
         const encoded = encodeDslForViewer(dsl);
-        const url = `${window.location.origin}/view?flow=${encoded}`;
+        const url = `${window.location.origin}/#/view?flow=${encoded}`;
         setShareViewerUrl(url);
         recordOnboardingEvent('first_share_opened', { surface: 'editor' });
         captureAnalyticsEvent('share_opened', { surface: 'editor' });
